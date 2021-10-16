@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Dars jadvali</string>
+    <string name="today">Bugun</string>
+    <string name="img_desc">Tavsif</string>
+    <string name="colon">:</string>
+
+    <!-- Lesson layout - Default strings -->
+    <string name="subject">Fizika</string>
+    <string name="theme">Ma&#8217;ruza darsi</string>
+    <string name="teacher">Davron</string>
+    <string name="teach_format">Sinfxonada</string>
+    <string name="date">Sana ...</string>
+    <string name="start_time">9:30</string>
+    <string name="end_time">10:20</string>
+
+    <string name="monday">Dush</string>
+    <string name="day">14</string>
+
+    <string name="home">Bosh</string>
+    <string name="tasks">Vazifalar</string>
+    <string name="lessons">Darslar</string>
+    <string name="chat">Suhbat</string>
+
+    <string name="loading">Yuklanmoqda ...</string>
+    <string name="group_name">942&#8211;19</string>
+</resources>

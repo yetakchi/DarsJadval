@@ -1,0 +1,61 @@
+{%extends 'layout.html'%}
+{%block title%}Dars qo&#8216;shish{%endblock%}
+{%block body%}
+    <div class="container">
+        <div>
+            <h2>Dars qo&#8216;shish</h2><br>
+            <form method="post">
+                <div class="form-group">
+                    <label for="subject">Fan nomi</label>
+                    <select name="subject" id="subject" class="form-control" required>
+                        <option value="">Fanni tanlang</option>
+                    {%for sub in subjects%}
+                        <option value="{{sub.id}}">{{sub.subject}} ({{sub.form.lower()}})</option>
+                    {%endfor%}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="teacher">O&#8216;qituvchi nomi</label>
+                    <select name="teacher" id="teacher" class="form-control" required>
+                        <option value="">O&#8216;qituvchini tanlang</option>
+                    {%for tech in teachers%}
+                        <option value="{{tech.id}}">{{tech.teacher}}</option>
+                    {%endfor%}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="teach_form">O&#8216;qitish shakli</label>
+                    <select name="teach_form" id="teach_form" class="form-control" required>
+                        <option value="1">Sinfxona</option>
+                        <option value="2">Zoom</option>
+                    </select>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label for="couple">Akademik soat</label>
+                    <select name="couple" id="couple" class="form-control" required>
+                        <option value="">Bittasini tanlang</option>
+                    {%for i in range(1, 7)%}
+                        <option value="{{i}}">{{i}}</option>
+                    {%endfor%}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="week_day">Kun</label>
+                    <select name="week_day" id="week_day" class="form-control">
+                        <option value="">Kunni tanlang</option>
+                    {% for day in days %}
+                        <option value="{{day.id}}">{{day.full_name}}</option>
+                    {%endfor%}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="room">Xona raqami</label>
+                    <input type="text" name="room" id="room" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-primary">Qo&#8216;shish</button>
+                <button type="reset" class="btn btn-light float-right">Tozlash</button>
+            </form>
+        </div>
+    </div>
+{%endblock%}

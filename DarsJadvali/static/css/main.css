@@ -1,0 +1,26 @@
+.drop-menu {
+    position: absolute;
+    width: 300px;
+    margin-top: 6px;
+    opacity: 0;
+    pointer-events: none;
+    list-style: none;
+    background-color: #fff;
+    border-top: 2px solid #1f8ceb;
+    border-radius: 2px;
+    box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.05), -2px 0px 5px 1px rgba(0, 0, 0, 0.05);
+    transform: translateY(20px);
+    transition: 0.2s linear;
+}
+
+.dropdown:hover .drop-menu {
+    pointer-events: auto;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.drop-menu li {
+    padding: 5px 0;
+    text-align: left;
+}
+
