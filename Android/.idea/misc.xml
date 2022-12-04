@@ -1,33 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DesignSurface">
-    <option name="filePathToZoomLevelMap">
-      <map>
-        <entry key="..\:/Android/Darsjadvali/app/src/main/res/drawable/dr_active_text.xml" value="0.319" />
-        <entry key="..\:/Android/Darsjadvali/app/src/main/res/drawable/dr_group_info.xml" value="0.319" />
-        <entry key="..\:/Android/Darsjadvali/app/src/main/res/drawable/dr_menu.xml" value="0.319" />
-        <entry key="..\:/Android/Darsjadvali/app/src/main/res/drawable/ic_clipboard.xml" value="0.319" />
-        <entry key="..\:/Android/Darsjadvali/app/src/main/res/drawable/ic_easel_art_chart.xml" value="0.319" />
-        <entry key="..\:/Android/Darsjadvali/app/src/main/res/drawable/ic_launcher_background.xml" value="0.319" />
-        <entry key="..\:/Android/Darsjadvali/app/src/main/res/drawable/ic_line.xml" value="0.319" />
-        <entry key="..\:/Android/Darsjadvali/app/src/main/res/drawable/ic_marked_book.xml" value="0.319" />
-        <entry key="..\:/Android/Darsjadvali/app/src/main/res/drawable/ic_messenger.xml" value="0.319" />
-        <entry key="..\:/Android/Darsjadvali/app/src/main/res/drawable/ic_shop.xml" value="0.319" />
-        <entry key="..\:/Android/Darsjadvali/app/src/main/res/drawable/ic_teacher_icon.xml" value="0.319" />
-        <entry key="..\:/Android/Darsjadvali/app/src/main/res/drawable/ic_zoom_icon.xml" value="0.319" />
-        <entry key="..\:/Android/Darsjadvali/app/src/main/res/drawable/sub_physics.xml" value="0.319" />
-        <entry key="..\:/Android/Darsjadvali/app/src/main/res/drawable/task.xml" value="0.319" />
-        <entry key="..\:/Android/Darsjadvali/app/src/main/res/layout/activity_launcher.xml" value="0.296195652173913" />
-        <entry key="..\:/Android/Darsjadvali/app/src/main/res/layout/activity_lessons.xml" value="0.296195652173913" />
-        <entry key="..\:/Android/Darsjadvali/app/src/main/res/layout/activity_loader.xml" value="0.296195652173913" />
-        <entry key="..\:/Android/Darsjadvali/app/src/main/res/layout/lesson.xml" value="0.296195652173913" />
-        <entry key="..\:/Android/Darsjadvali/app/src/main/res/layout/week_day.xml" value="0.296195652173913" />
-        <entry key="..\:/Android/Darsjadvali/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.319" />
-        <entry key="..\:/Android/Darsjadvali/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.319" />
-      </map>
-    </option>
-  </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
