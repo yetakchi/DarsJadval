@@ -72,7 +72,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/week_days"
-        tools:listitem="@layout/lesson">
+        tools:listitem="@layout/lesson_item">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -138,5 +138,4 @@
             android:textColor="@color/white"
             app:drawableTopCompat="@drawable/ic_messenger" />
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

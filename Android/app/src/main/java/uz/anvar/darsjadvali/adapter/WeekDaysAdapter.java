@@ -1,5 +1,6 @@
 package uz.anvar.darsjadvali.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,21 +11,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import uz.anvar.darsjadvali.LessonActivity;
 import uz.anvar.darsjadvali.R;
 import uz.anvar.darsjadvali.holder.WeekDaysViewHolder;
 import uz.anvar.darsjadvali.model.WeekDay;
-import uz.anvar.darsjadvali.request.LessonsLoader;
 
 
 public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysViewHolder> {
 
-    Context context;
-    List<WeekDay> days;
+    private final Context context;
+    private final List<WeekDay> days;
+    private final OnItemClickListener onItemClickListener;
 
-    public WeekDaysAdapter(Context context, List<WeekDay> days) {
+    public WeekDaysAdapter(Context context, List<WeekDay> days, OnItemClickListener onItemClickListener) {
         this.context = context;
         this.days = days;
+        this.onItemClickListener = onItemClickListener;
     }
 
     @NonNull
@@ -39,10 +40,7 @@ public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysViewHolder> {
         holder.setDayName(days.get(position).getDayName());
         holder.setDay(days.get(position).getDay());
 
-        holder.itemView.setOnClickListener(v -> {
-            LessonActivity.lessons_loader.setVisibility(View.VISIBLE);
-            new LessonsLoader().execute(LessonActivity.url + "/lessons/" + days.get(position).getId());
-        });
+        holder.itemView.setOnClickListener(v -> onItemClickListener.onClick(days.get(position).getId()));
 
         if (days.get(position).isActive())
             holder.setActive();
@@ -51,5 +49,13 @@ public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysViewHolder> {
     @Override
     public int getItemCount() {
         return days.size();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setList(List<WeekDay> list) {
+        this.days.clear();
+        this.days.addAll(list);
+
+        this.notifyDataSetChanged();
     }
 }

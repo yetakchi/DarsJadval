@@ -1,12 +1,12 @@
 package uz.anvar.darsjadvali;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import uz.anvar.darsjadvali.utils.Global;
 
 
 public class LaunchActivity extends AppCompatActivity {
@@ -17,34 +17,15 @@ public class LaunchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_launcher);
 
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(LaunchActivity.this, LessonActivity.class);
-                startActivity(intent);
-            }
+        handler.postDelayed(() -> {
+            Intent intent = new Intent(LaunchActivity.this, LessonActivity.class);
+            startActivity(intent);
         }, 400);
     }
 
     @Override
     public void onBackPressed() {
-        new AlertDialog.Builder(this)
-                .setTitle("Dasturdan chiqish")
-                .setMessage("Dasturdan chiqmoqchimisiz?")
-                .setPositiveButton("Ha", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish(); // Agar birinchi ekran bo'lsa
-                        // finishAffinity(); // Har qanday o'tishlardan ham keyin
-                        // System.exit(0);
-                    }
-                })
-                .setNegativeButton("Yo\u2018q", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+        Global.dialog(this, this);
     }
 
     //    ViewFlipper includes;

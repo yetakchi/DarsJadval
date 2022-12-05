@@ -1,5 +1,6 @@
 package uz.anvar.darsjadvali.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +14,13 @@ import java.util.List;
 import uz.anvar.darsjadvali.R;
 import uz.anvar.darsjadvali.holder.LessonsViewHolder;
 import uz.anvar.darsjadvali.model.Lesson;
+import uz.anvar.darsjadvali.utils.Global;
 
 
 public class LessonAdapter extends RecyclerView.Adapter<LessonsViewHolder> {
 
-    Context context;
-    List<Lesson> lessons;
+    private final Context context;
+    private List<Lesson> lessons;
 
     public LessonAdapter(Context context, List<Lesson> lessons) {
         this.context = context;
@@ -28,8 +30,7 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonsViewHolder> {
     @NonNull
     @Override
     public LessonsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View inflater = LayoutInflater.from(context).inflate(R.layout.lesson,
-                parent, false);
+        View inflater = LayoutInflater.from(context).inflate(R.layout.lesson_item, parent, false);
         return new LessonsViewHolder(inflater);
     }
 
@@ -65,7 +66,10 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonsViewHolder> {
         holder.setAnimation(position);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setLessonsList(List<Lesson> lessonsList) {
         lessons = lessonsList;
+        Global.lessons = lessonsList;
+        this.notifyDataSetChanged();
     }
 }

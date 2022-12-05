@@ -1,11 +1,6 @@
 package uz.anvar.darsjadvali.request;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.AsyncTask;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,20 +13,18 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import uz.anvar.darsjadvali.adapter.WeekDaysAdapter;
+import uz.anvar.darsjadvali.adapter.OnDataLoadListener;
 import uz.anvar.darsjadvali.model.WeekDay;
+import uz.anvar.darsjadvali.utils.Global;
+
 
 public class WeekDaysLoader extends AsyncTask<String, String, String> {
 
-    @SuppressLint("StaticFieldLeak")
-    Context context;
-    @SuppressLint("StaticFieldLeak")
-    RecyclerView daysRecycler;
+    private final OnDataLoadListener loadListener;
 
-    public WeekDaysLoader(Context context, RecyclerView daysRecycler) {
+    public WeekDaysLoader(OnDataLoadListener listener) {
         super();
-        this.context = context;
-        this.daysRecycler = daysRecycler;
+        this.loadListener = listener;
     }
 
     @Override
@@ -40,7 +33,7 @@ public class WeekDaysLoader extends AsyncTask<String, String, String> {
             URL url = new URL(strings[0]);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             InputStream input = connection.getInputStream();
-            String result = Methods.ReadStream(input);
+            String result = Global.ReadStream(input);
             connection.disconnect();
             input.close();
 
@@ -59,11 +52,14 @@ public class WeekDaysLoader extends AsyncTask<String, String, String> {
     }
 
     private void setWeekDays(String string) {
+        if (string == null || string.isEmpty())
+            return;
+
         List<WeekDay> daysList = new ArrayList<>();
         try {
             JSONArray jsonArray = new JSONArray(string);
             JSONObject json;
-            for (int i = 0; i < jsonArray.length(); i ++) {
+            for (int i = 0; i < jsonArray.length(); i++) {
                 json = jsonArray.getJSONObject(i);
                 WeekDay day = new WeekDay(
                         json.getInt("id"),
@@ -78,15 +74,6 @@ public class WeekDaysLoader extends AsyncTask<String, String, String> {
             e.printStackTrace();
         }
 
-        setRecycler(daysList);
-    }
-
-    private void setRecycler(List<WeekDay> daysList) {
-        WeekDaysAdapter adapter = new WeekDaysAdapter(context, daysList);
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(context,
-                RecyclerView.HORIZONTAL, false);
-
-        daysRecycler.setLayoutManager(manager);
-        daysRecycler.setAdapter(adapter);
+        loadListener.onWeekDaysLoad(daysList);
     }
 }

@@ -1,7 +1,6 @@
 package uz.anvar.darsjadvali.request;
 
 import android.os.AsyncTask;
-import android.view.View;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,16 +11,19 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
-import uz.anvar.darsjadvali.LessonActivity;
+import uz.anvar.darsjadvali.adapter.OnDataLoadListener;
 import uz.anvar.darsjadvali.model.Lesson;
+import uz.anvar.darsjadvali.utils.Global;
 
 
 public class LessonsLoader extends AsyncTask<String, String, String> {
 
-    public LessonsLoader() {
+    private final OnDataLoadListener loadListener;
+
+    public LessonsLoader(OnDataLoadListener listener) {
         super();
+        loadListener = listener;
     }
 
     @Override
@@ -30,7 +32,7 @@ public class LessonsLoader extends AsyncTask<String, String, String> {
             URL url = new URL(strings[0]);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             InputStream input = connection.getInputStream();
-            String result = Methods.ReadStream(input);
+            String result = Global.ReadStream(input);
             connection.disconnect();
             input.close();
 
@@ -49,11 +51,14 @@ public class LessonsLoader extends AsyncTask<String, String, String> {
     }
 
     private void setLessonsList(String string) {
+        if (string == null || string.isEmpty())
+            return;
+
         ArrayList<Lesson> lessons = new ArrayList<>();
         try {
             JSONArray jsonArray = new JSONArray(string);
             JSONObject json;
-            for (int i = 0; i < jsonArray.length(); i ++) {
+            for (int i = 0; i < jsonArray.length(); i++) {
                 json = jsonArray.getJSONObject(i);
                 lessons.add(new Lesson(
                         i + 1,
@@ -72,13 +77,6 @@ public class LessonsLoader extends AsyncTask<String, String, String> {
             e.printStackTrace();
         }
 
-        setRecycler(lessons);
-    }
-
-    private void setRecycler(List<Lesson> lessonsList) {
-        LessonActivity.lessons_loader.setVisibility(View.GONE);
-
-        LessonActivity.lessonAdapter.setLessonsList(lessonsList);
-        LessonActivity.lessonAdapter.notifyDataSetChanged();
+        loadListener.onLessonsLoad(lessons);
     }
 }

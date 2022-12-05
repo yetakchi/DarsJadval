@@ -2,6 +2,7 @@ package uz.anvar.darsjadvali;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -10,56 +11,84 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import uz.anvar.darsjadvali.adapter.LessonAdapter;
+import uz.anvar.darsjadvali.adapter.OnDataLoadListener;
+import uz.anvar.darsjadvali.adapter.WeekDaysAdapter;
 import uz.anvar.darsjadvali.model.Lesson;
+import uz.anvar.darsjadvali.model.WeekDay;
+import uz.anvar.darsjadvali.request.Constants;
 import uz.anvar.darsjadvali.request.LessonsLoader;
 import uz.anvar.darsjadvali.request.TodayDateLoader;
 import uz.anvar.darsjadvali.request.WeekDaysLoader;
 
+
 public class LessonActivity extends AppCompatActivity {
 
-    public RecyclerView lessonsRecycler, week_days;
+    public RecyclerView lessonsRecycler, weekDaysRecycler;
     public TextView today;
 
     @SuppressLint("StaticFieldLeak")
-    public static ProgressBar lessons_loader;
-    @SuppressLint("StaticFieldLeak")
-    public static LessonAdapter lessonAdapter;
-    public static String url = "http://192.168.1." + 4 + ":5000";
+    public static ProgressBar loader;
+
+    public LessonAdapter lessonAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lessons);
 
-        week_days = findViewById(R.id.week_days);
-        lessons_loader = findViewById(R.id.lessons_loader);
+        setContentActivity();
+    }
+
+    private void setContentActivity() {
+        weekDaysRecycler = findViewById(R.id.week_days);
         lessonsRecycler = findViewById(R.id.lessons);
+        loader = findViewById(R.id.lessons_loader);
         today = findViewById(R.id.today);
 
-        setWeekDaysRecycler(week_days);
-        setLessonsRecycler();
+        setUpRecycler();
         setTodayDate();
     }
 
-    private void setTodayDate() {
-        new TodayDateLoader(today).execute(url + "/today");
-    }
+    private void setUpRecycler() {
+        WeekDaysAdapter adapter = new WeekDaysAdapter(LessonActivity.this, Collections.emptyList(), id -> {
+            LessonActivity.loader.setVisibility(View.VISIBLE);
+            LessonActivity.this.lessonLoader("/lessons/" + id);
+        });
 
-    private void setLessonsRecycler() {
-        ArrayList<Lesson> lessonArrayList = new ArrayList<>();
-        lessonAdapter = new LessonAdapter(this, lessonArrayList);
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(this,
-                RecyclerView.VERTICAL, false);
+        RecyclerView.LayoutManager manager1 = new LinearLayoutManager(LessonActivity.this, RecyclerView.HORIZONTAL, false);
+        weekDaysRecycler.setLayoutManager(manager1);
+        weekDaysRecycler.setAdapter(adapter);
 
+        new WeekDaysLoader(new OnDataLoadListener() {
+            @Override
+            public void onWeekDaysLoad(List<WeekDay> list) {
+                adapter.setList(list);
+            }
+        }).execute(Constants.url + "/days");
+
+        lessonAdapter = new LessonAdapter(this, new ArrayList<>());
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         lessonsRecycler.setLayoutManager(manager);
         lessonsRecycler.setAdapter(lessonAdapter);
 
-        new LessonsLoader().execute(url + "/lessons/auto");
+        lessonLoader("/lessons/auto");
     }
 
-    private void setWeekDaysRecycler(RecyclerView week_days) {
-        new WeekDaysLoader(this, week_days).execute(url + "/days");
+    private void lessonLoader(String path) {
+        new LessonsLoader(new OnDataLoadListener() {
+            @Override
+            public void onLessonsLoad(List<Lesson> list) {
+                LessonActivity.loader.setVisibility(View.GONE);
+                lessonAdapter.setLessonsList(list);
+            }
+        }).execute(Constants.url + path);
+    }
+
+    private void setTodayDate() {
+        new TodayDateLoader(today).execute(Constants.url + "/today");
     }
 }
