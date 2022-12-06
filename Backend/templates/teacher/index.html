@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+{% block title %}O&#8216;qituvchi{% endblock %}
+{% block body %}
+    <div class="mx-5">
+        <h3 class="card-title">O&#8216;qituvchi ro&#8216;yxati</h3>
+        <div class="card">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>O&#8216;qituvchi</th>
+                        <th>O&#8216;qituvchi F.I.</th>
+                        <th width="1px"><span>Ko&#8216;proq</span></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for tech in teachers %}
+                        <tr>
+                            <td>{{ tech.id }}</td>
+                            <td>{{ tech.name }}</td>
+                            <td>
+                                <a href="/teachers/{{ tech.id }}/detail" class="btn btn-info"><span>Ko&#8216;rish</span></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

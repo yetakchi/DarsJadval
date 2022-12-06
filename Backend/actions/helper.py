@@ -38,16 +38,14 @@ days = [
 
 
 # Lessons
-def autoLesson():
+def auto_lesson():
     time = datetime.datetime.now()
     return f"/lessons/{time.weekday() + 1}"
 
 
-def thisLessons(lessons):
+def current_lesson(lessons):
     t = f"{datetime.datetime.now().time()}"
 
-    size = len(lessons)
-    print(size)
     for lesson in lessons:
         form(lesson)
         couple(lesson)
@@ -57,7 +55,7 @@ def thisLessons(lessons):
     return lessons
 
 
-def lessonsList(lessons):
+def lesson_list(lessons):
     for les in lessons:
         form(les)
         couple(les)
@@ -65,17 +63,17 @@ def lessonsList(lessons):
     return lessons
 
 
-def checkSubjectForm(subjects):
+def check_subject_form(subjects):
     for sub in subjects:
         form(sub)
 
 
 # Date
-def getDays():
+def get_days():
     time = datetime.datetime.now()
     today = time.weekday() + 1
     first = 0
-    week_days = checkWeekDate(time)
+    week_days = check_week_date(time)
 
     for day in days:
         day['active'] = day['id'] == today
@@ -85,7 +83,7 @@ def getDays():
     return days
 
 
-def checkWeekDate(time):
+def check_week_date(time):
     month_days = calendar.Calendar().monthdayscalendar(time.now().year, time.now().month)
     week = (time.day + 6) // 7
     this_week = month_days[week - 1]
@@ -100,7 +98,7 @@ def checkWeekDate(time):
     return this_week
 
 
-def todayDate():
+def today_date():
     months = [
         'yanvar',
         'fevral',

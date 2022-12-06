@@ -1,32 +1,31 @@
 from flask import Flask, jsonify, render_template, request, redirect
-from database import DataBase
-import helper  # from helper import *
+from database.database import DataBase
+from actions import helper
 
 app = Flask(__name__)
 db = DataBase()
 
 
 @app.route('/days')
-def Days():
-    result = helper.getDays()
-
+def days():
+    result = helper.get_days()
     return jsonify(result)
 
 
 @app.route('/lessons/auto')
-def Lessons():
-    return redirect(helper.autoLesson())
+def lessons():
+    return redirect(helper.auto_lesson())
 
 
 @app.route('/lessons/<int:day>')
-def Lesson(day):
-    lessons_list = helper.thisLessons(db.Lesson(day))
+def current_lesson(day):
+    lessons_list = helper.current_lesson(db.lesson(day))
     return jsonify(lessons_list)
 
 
 @app.route('/today')
-def Today():
-    return helper.todayDate()
+def today():
+    return helper.today_date()
 
 
 # Templates, admin side
@@ -42,82 +41,81 @@ def about():
 
 # Lessons
 @app.route('/lessons/create', methods=["GET", "POST"])
-def addLesson():
+def add_lesson():
     if request.method == 'POST':
-        return redirect(db.addLesson(request.form))
+        return redirect(db.add_lesson(request.form))
 
-    subjects = db.Subjects()
-    helper.checkSubjectForm(subjects)
-    return render_template("create_lesson.html", subjects=subjects, teachers=db.Teachers(), days=helper.days)
+    subjects = db.subjects()
+    helper.check_subject_form(subjects)
+    return render_template("lesson/form.html", subjects=subjects, teachers=db.teachers(), days=helper.days)
 
 
 @app.route('/lessons')
-def lessonsList():
-    lessons = helper.lessonsList(db.Lessons())
-    return render_template('lessons.html', lessons=lessons)
+def lesson_list():
+    return render_template('lesson/index.html', lessons=helper.lesson_list(db.lessons()))
 
 
 @app.route('/lessons/<int:lesson>/detail')
-def lessonDetail(lesson):
-    return render_template('detail_lesson.html', lesson=db.lessonDetail(lesson))
+def lesson_detail(lesson):
+    return render_template('lesson/detail.html', lesson=db.lesson_detail(lesson))
 
 
 @app.route('/lessons/<int:lesson>/delete', methods=['POST'])
-def deleteLesson(lesson):
-    return redirect(db.deleteLesson(lesson))
+def delete_lesson(lesson):
+    return redirect(db.delete_lesson(lesson))
 
 
 # Subjects
 @app.route('/subjects')
-def subjectsList():
-    return render_template('subjects.html', subjects=db.Subjects())
+def subject_list():
+    return render_template('subject/index.html', subjects=db.subjects())
 
 
 @app.route('/subjects/create', methods=['GET', 'POST'])
-def createSubject():
+def create_subject():
     if request.method == 'GET':
-        return render_template('create_subject.html')
+        return render_template('subject/form.html')
 
-    return redirect(db.addSubject(request.form))
+    return redirect(db.add_subject(request.form))
 
 
 @app.route('/subjects/<int:subject>/detail')
-def subjectDetail(subject):
-    return db.subjectDetail(subject)
+def subject_detail(subject):
+    return db.subject_detail(subject)
 
 
 @app.route('/subjects/<int:subject>/delete', methods=['POST'])
-def deleteSubject(subject):
-    return db.deleteSubject(subject)
+def delete_subject(subject):
+    return db.delete_subject(subject)
 
 
 # Teachers
 @app.route('/teachers/create', methods=['GET', 'POST'])
-def addTeacher():
+def add_teacher():
     if request.method == 'GET':
-        return render_template('create_teacher.html')
+        return render_template('teacher/form.html')
 
-    return redirect(db.addTeacher(request.form))
+    return redirect(db.add_teacher(request.form))
 
 
 @app.route('/teachers')
-def teachersList():
-    return render_template('teachers.html', teachers=db.Teachers())
+def teacher_list():
+    return render_template('teacher/index.html', teachers=db.teachers())
 
 
 @app.route('/teachers/<int:teacher>/detail')
-def teacherDetail(teacher):
-    return render_template('detail_teacher.html', teacher=db.teacherDetail(teacher))
+def teacher_detail(teacher):
+    return render_template('teacher/detail.html', teacher=db.teacher_detail(teacher))
 
 
 @app.route('/teachers/<int:teacher>/delete', methods=['POST'])
-def teacherDelete(teacher):
-    return redirect(db.deleteTeacher(teacher))
+def teacher_delete(teacher):
+    return redirect(db.delete_teacher(teacher))
 
 
 @app.route('/teachers/<int:teacher>/update', methods=['POST'])
-def teacherUpdate(teacher):
-    return redirect(db.updateTeacher(teacher, request.form))
+def teacher_update(teacher):
+    return redirect(db.update_teacher(teacher, request.form))
 
 
 if __name__ == '__main__':

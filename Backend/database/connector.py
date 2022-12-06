@@ -1,4 +1,7 @@
 import mysql.connector
+from dotenv import dotenv_values
+
+env = dict(dotenv_values())
 
 
 class MYSQLConnector:
@@ -6,73 +9,73 @@ class MYSQLConnector:
         self.connection = None
         self.db = None
 
-    def Connect(self):
+    def connect(self):
         try:
             self.connection = mysql.connector.connect(
-                host="127.0.0.1",
-                user="root",
-                password='yashirin',
-                database="schedule"
+                host=env['DB_HOST'],
+                user=env['DB_USERNAME'],
+                password=env['DB_PASSWORD'],
+                database=env['DB_DATABASE']
             )
             self.db = self.connection.cursor(dictionary=True)  # Set dictionary
             return True
         except ConnectionError:
             return False
 
-    def Disconnect(self):
+    def disconnect(self):
         if self.connection:
             self.connection.disconnect()
 
     # Functions
-    def Select(self, query):
-        if not self.Connect():
+    def select(self, query):
+        if not self.connect():
             return
 
         self.db.execute(query)
         res = self.db.fetchall()
-        self.Disconnect()
+        self.disconnect()
 
         return res
 
-    def selectOne(self, query):
-        if not self.Connect():
+    def select_one(self, query):
+        if not self.connect():
             return
 
         self.db.execute(query)
         res = self.db.fetchone()
-        self.Disconnect()
+        self.disconnect()
 
         return res
 
-    def SelectTable(self, table):
-        return self.Select(f"SELECT * FROM {table};")
+    def select_table(self, table):
+        return self.select(f"SELECT * FROM {table};")
 
-    def Insert(self, query, args=(), reply='/'):
-        if not self.Connect():
+    def insert(self, query, args=(), reply='/'):
+        if not self.connect():
             return ''
 
         self.db.execute(query, args)
         self.connection.commit()
-        self.Disconnect()
+        self.disconnect()
 
         return reply
 
-    def Delete(self, table, n):
-        if not self.Connect():
+    def delete(self, table, n):
+        if not self.connect():
             return ''
 
         self.db.execute(f"DELETE FROM {table} WHERE id = {n}")
         self.connection.commit()
-        self.Disconnect()
+        self.disconnect()
 
         return '/' + table
 
-    def Update(self, query, args=(), reply='/'):
-        if not self.Connect():
+    def update(self, query, args=(), reply='/'):
+        if not self.connect():
             return ''
 
         self.db.execute(query, args)
         self.connection.commit()
-        self.Disconnect()
+        self.disconnect()
 
         return reply

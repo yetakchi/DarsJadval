@@ -1,6 +1,6 @@
-{%extends 'layout.html'%}
-{%block title%}Dars qo&#8216;shish{%endblock%}
-{%block body%}
+{% extends 'layout.html' %}
+{% block title %}Dars qo&#8216;shish{% endblock %}
+{% block body %}
     <div class="container">
         <div>
             <h2>Dars qo&#8216;shish</h2><br>
@@ -9,18 +9,18 @@
                     <label for="subject">Fan nomi</label>
                     <select name="subject" id="subject" class="form-control" required>
                         <option value="">Fanni tanlang</option>
-                    {%for sub in subjects%}
-                        <option value="{{sub.id}}">{{sub.subject}} ({{sub.form.lower()}})</option>
-                    {%endfor%}
+                        {% for sub in subjects %}
+                            <option value="{{ sub.id }}">{{ sub.name }} ({{ sub.form.lower() }})</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="teacher">O&#8216;qituvchi nomi</label>
                     <select name="teacher" id="teacher" class="form-control" required>
                         <option value="">O&#8216;qituvchini tanlang</option>
-                    {%for tech in teachers%}
-                        <option value="{{tech.id}}">{{tech.teacher}}</option>
-                    {%endfor%}
+                        {% for tech in teachers %}
+                            <option value="{{ tech.id }}">{{ tech.name }}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="form-group">
@@ -35,18 +35,18 @@
                     <label for="couple">Akademik soat</label>
                     <select name="couple" id="couple" class="form-control" required>
                         <option value="">Bittasini tanlang</option>
-                    {%for i in range(1, 7)%}
-                        <option value="{{i}}">{{i}}</option>
-                    {%endfor%}
+                        {% for i in range(1, 7) %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="week_day">Kun</label>
                     <select name="week_day" id="week_day" class="form-control">
                         <option value="">Kunni tanlang</option>
-                    {% for day in days %}
-                        <option value="{{day.id}}">{{day.full_name}}</option>
-                    {%endfor%}
+                        {% for day in days %}
+                            <option value="{{ day.id }}">{{ day.full_name }}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="form-group">
@@ -58,4 +58,4 @@
             </form>
         </div>
     </div>
-{%endblock%}
+{% endblock %}
