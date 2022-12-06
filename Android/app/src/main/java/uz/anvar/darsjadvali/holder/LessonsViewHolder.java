@@ -16,28 +16,29 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import uz.anvar.darsjadvali.R;
 
+
 public class LessonsViewHolder extends RecyclerView.ViewHolder {
 
-    TextView start_time, end_time, colon;
-    TextView subject, teacher, theme, teach_form;
-    ImageView lesson_img, subject_line;
-    CardView lesson_bg;
-    RadioButton active_subject;
+    TextView startTime, endTime, colon;
+    TextView subject, teacher, theme, teachForm;
+    ImageView lessonImg, subjectLine;
+    CardView lessonCard;
+    RadioButton activeSubject;
 
     public LessonsViewHolder(@NonNull View itemView) {
         super(itemView);
 
-        start_time = itemView.findViewById(R.id.start_time);
-        end_time = itemView.findViewById(R.id.end_time);
+        startTime = itemView.findViewById(R.id.start_time);
+        endTime = itemView.findViewById(R.id.end_time);
         subject = itemView.findViewById(R.id.subject);
         teacher = itemView.findViewById(R.id.teacher);
         theme = itemView.findViewById(R.id.theme);
-        teach_form = itemView.findViewById(R.id.teach_form);
-        lesson_img = itemView.findViewById(R.id.lesson_img);
-        lesson_bg = itemView.findViewById(R.id.lesson_bg);
+        teachForm = itemView.findViewById(R.id.teach_form);
+        lessonImg = itemView.findViewById(R.id.lesson_img);
+        lessonCard = itemView.findViewById(R.id.lesson_card);
         colon = itemView.findViewById(R.id.colon);
-        active_subject = itemView.findViewById(R.id.active_subject);
-        subject_line = itemView.findViewById(R.id.subject_line);
+        activeSubject = itemView.findViewById(R.id.active_subject);
+        subjectLine = itemView.findViewById(R.id.subject_line);
     }
 
     public void setSubject(String name) {
@@ -53,81 +54,78 @@ public class LessonsViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setTeachForm(String format) {
-        teach_form.setText(format);
+        teachForm.setText(format);
     }
 
     public void setStartTime(String time) {
-        start_time.setText(time);
+        startTime.setText(time);
     }
 
     public void setEndTime(String time) {
-        end_time.setText(time);
+        endTime.setText(time);
     }
 
     public void setLessonImage(String src) {
-        System.out.println(src);
-//        lesson_img.setImageResource();
+        // lesson_img.setImageResource();
     }
 
     public void addOnClickListener(Context context, String number) {
-        lesson_bg.setOnClickListener(v ->
-                Toast.makeText(context, number, Toast.LENGTH_SHORT).show()
-        );
+        lessonCard.setOnClickListener(v -> Toast.makeText(context, number, Toast.LENGTH_SHORT).show());
     }
 
     public void setActive(boolean isActive) {
         int bg, color;
         if (isActive) {
             color = Color.WHITE;
-            bg = lesson_bg.getResources().getColor(R.color.active_card);
+            bg = lessonCard.getResources().getColor(R.color.active_card);
 
-            lesson_img.setVisibility(View.VISIBLE);
+            lessonImg.setVisibility(View.VISIBLE);
             subject.setTextColor(color);
         } else {
-            color = lesson_bg.getResources().getColor(R.color.inactive_text);
-            bg = lesson_bg.getResources().getColor(R.color.inactive_card);
+            color = lessonCard.getResources().getColor(R.color.inactive_text);
+            bg = lessonCard.getResources().getColor(R.color.inactive_card);
 
-            lesson_img.setVisibility(View.GONE);
+            lessonImg.setVisibility(View.GONE);
             subject.setTextColor(Color.BLACK);
         }
 
         setTextColor(color);
-        active_subject.setChecked(isActive);
-        lesson_bg.setCardBackgroundColor(bg);
+        activeSubject.setChecked(isActive);
+        lessonCard.setCardBackgroundColor(bg);
     }
 
     private void setTextColor(int color) {
         theme.setTextColor(color);
         teacher.setTextColor(color);
-        teach_form.setTextColor(color);
+        teachForm.setTextColor(color);
         colon.setTextColor(color);
     }
 
     public void Invisible(int size, int id) {
         if (size == id && size > 1) {
-            subject_line.setVisibility(View.INVISIBLE);
-            subject_line.setAlpha(0f);
+            subjectLine.setVisibility(View.INVISIBLE);
+            subjectLine.setAlpha(0f);
         } else {
-            subject_line.setVisibility(View.VISIBLE);
-            subject_line.setAlpha(1f);
+            subjectLine.setVisibility(View.VISIBLE);
+            subjectLine.setAlpha(1f);
         }
     }
 
     public void setTextDrawables(int res) {
-        teach_form.setCompoundDrawablesWithIntrinsicBounds(res, 0, 0, 0);
+        teachForm.setCompoundDrawablesWithIntrinsicBounds(res, 0, 0, 0);
     }
 
-    public void setAnimation(int delay) {
-        Animation animation = AnimationUtils.loadAnimation(lesson_bg.getContext(), R.anim.fade);
-        animation.setStartOffset(delay * 500 + 100);
+    public void setAnimation(int position) {
+        Animation animation = AnimationUtils.loadAnimation(lessonCard.getContext(), R.anim.card_fade);
+        animation.setStartOffset(position * 500L + 100);
 
-        lesson_bg.setAnimation(animation);
-        start_time.setAnimation(animation);
-        end_time.setAnimation(animation);
-        active_subject.setAnimation(animation);
+        lessonCard.setAnimation(animation);
+        startTime.setAnimation(animation);
+        endTime.setAnimation(animation);
+        activeSubject.setAnimation(animation);
 
-        Animation line = AnimationUtils.loadAnimation(subject_line.getContext(), R.anim.line);
-        line.setStartOffset(delay * 1000);
-        subject_line.setAnimation(line);
+        Animation line = AnimationUtils.loadAnimation(subjectLine.getContext(), R.anim.line);
+        line.setStartOffset(position * 1000L);
+        subjectLine.setAnimation(line);
     }
 }
