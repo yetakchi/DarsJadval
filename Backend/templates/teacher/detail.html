@@ -4,16 +4,16 @@
     <div class="container w-50">
         <h1>{{ teacher.teacher }}</h1>
         <div class="alert alert-info">
-            <form action="/teachers/{{ teacher.id }}/update" method="post">
+            <form action="/teachers/{{ teacher.id }}" method="put">
                 <div class="form-group">
-                    <label for="teacher"><b>O&#8216;qituvchi familiyasi va ismi</b></label>
-                    <input type="text" name="name" id="name" value="{{ teacher.name }}" class="form-control"
-                           required>
+                    <label for="name"><b>O&#8216;qituvchi familiyasi va ismi</b></label>
+                    <input type="text" name="name" id="name" value="{{ teacher.name }}"
+                           class="form-control" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Yangilash</button>
                 <button type="button" onclick="del_form.submit()" class="btn btn-danger">O&#8216;chirish</button>
             </form>
-            <form action="/teachers/{{ teacher.id }}/delete" method="post" id="del_form"></form>
+            <form action="/teachers/{{ teacher.id }}" method="post" id="del_form"></form>
         </div>
     </div>
 {% endblock %}

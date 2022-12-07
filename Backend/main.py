@@ -19,8 +19,7 @@ def lessons():
 
 @app.route('/lessons/<int:day>')
 def current_lesson(day):
-    lessons_list = helper.current_lesson(db.lesson(day))
-    return jsonify(lessons_list)
+    return jsonify(helper.current_lesson(db.lesson(day)))
 
 
 @app.route('/today')
@@ -40,27 +39,36 @@ def about():
 
 
 # Lessons
-@app.route('/lessons/create', methods=["GET", "POST"])
-def add_lesson():
-    if request.method == 'POST':
-        return redirect(db.add_lesson(request.form))
-
-    subjects = db.subjects()
-    helper.check_subject_form(subjects)
-    return render_template("lesson/form.html", subjects=subjects, teachers=db.teachers(), days=helper.days)
-
-
 @app.route('/lessons')
 def lesson_list():
-    return render_template('lesson/index.html', lessons=helper.lesson_list(db.lessons()))
+    return render_template('lesson/index.html',
+                           lessons=helper.lesson_list(db.lessons()),
+                           subject_forms=helper.subject_forms
+                           )
 
 
+@app.route('/lessons/create')
 @app.route('/lessons/<int:lesson>/detail')
-def lesson_detail(lesson):
-    return render_template('lesson/detail.html', lesson=db.lesson_detail(lesson))
+def add_lesson(lesson=0):
+    data = {
+        'subjects': db.subjects(),
+        'teachers': db.teachers(),
+        'days': helper.days,
+        'subject_forms': helper.subject_forms,
+        'lesson': db.lesson_detail(lesson) if lesson else {},
+    }
+
+    return render_template("lesson/form.html", **data)
 
 
-@app.route('/lessons/<int:lesson>/delete', methods=['POST'])
+@app.route('/lessons', methods=['POST', 'PUT'])
+def upsert_lesson():
+    if request.method == 'PUT':
+        return redirect('/lessons')
+    return redirect(db.add_lesson(request.form))
+
+
+@app.route('/lessons/<int:lesson>/delete', methods=['DELETE'])
 def delete_lesson(lesson):
     return redirect(db.delete_lesson(lesson))
 
@@ -71,20 +79,22 @@ def subject_list():
     return render_template('subject/index.html', subjects=db.subjects())
 
 
-@app.route('/subjects/create', methods=['GET', 'POST'])
-def create_subject():
-    if request.method == 'GET':
-        return render_template('subject/form.html')
+@app.route('/subjects/create')
+@app.route('/subjects/<int:subject>/detail')
+def create_subject(subject=0):
+    if subject:
+        subject = db.subject_detail(subject)
+    else:
+        subject = {}
+    return render_template('subject/form.html', forms=helper.subject_forms, subject=subject)
 
+
+@app.route('/subjects', methods=['POST', 'PUT'])
+def upsert_subject():
     return redirect(db.add_subject(request.form))
 
 
-@app.route('/subjects/<int:subject>/detail')
-def subject_detail(subject):
-    return db.subject_detail(subject)
-
-
-@app.route('/subjects/<int:subject>/delete', methods=['POST'])
+@app.route('/subjects/<int:subject>', methods=['DELETE'])
 def delete_subject(subject):
     return db.delete_subject(subject)
 
@@ -108,14 +118,19 @@ def teacher_detail(teacher):
     return render_template('teacher/detail.html', teacher=db.teacher_detail(teacher))
 
 
-@app.route('/teachers/<int:teacher>/delete', methods=['POST'])
+@app.route('/teachers/<int:teacher>', methods=['PUT'])
+def teacher_update(teacher):
+    return redirect(db.update_teacher(teacher, request.form))
+
+
+@app.route('/teachers/<int:teacher>', methods=['DELETE'])
 def teacher_delete(teacher):
     return redirect(db.delete_teacher(teacher))
 
 
-@app.route('/teachers/<int:teacher>/update', methods=['POST'])
-def teacher_update(teacher):
-    return redirect(db.update_teacher(teacher, request.form))
+@app.errorhandler(404)
+def not_found(error):
+    return render_template('errors/404.html', error=error), 404
 
 
 if __name__ == '__main__':

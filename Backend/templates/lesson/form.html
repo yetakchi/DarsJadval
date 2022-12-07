@@ -4,22 +4,26 @@
     <div class="container">
         <div>
             <h2>Dars qo&#8216;shish</h2><br>
-            <form method="post">
+            <form action="/lessons" method="{{ 'PUT' if(lesson) else 'POST' }}">
                 <div class="form-group">
-                    <label for="subject">Fan nomi</label>
-                    <select name="subject" id="subject" class="form-control" required>
+                    <label for="subject_id">Fan nomi</label>
+                    <select name="subject_id" id="subject_id" class="form-control" required>
                         <option value="">Fanni tanlang</option>
                         {% for sub in subjects %}
-                            <option value="{{ sub.id }}">{{ sub.name }} ({{ sub.form.lower() }})</option>
+                            <option value="{{ sub.id }}" {% if lesson.subject_id == sub.id %}selected {% endif %}>
+                                <span>{{ sub.name }} ({{ subject_forms[sub.form].lower() }})</span>
+                            </option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="teacher">O&#8216;qituvchi nomi</label>
-                    <select name="teacher" id="teacher" class="form-control" required>
+                    <label for="teacher_id">O&#8216;qituvchi nomi</label>
+                    <select name="teacher_id" id="teacher_id" class="form-control" required>
                         <option value="">O&#8216;qituvchini tanlang</option>
                         {% for tech in teachers %}
-                            <option value="{{ tech.id }}">{{ tech.name }}</option>
+                            <option value="{{ tech.id }}" {% if lesson.teacher_id == tech.id %}selected {% endif %}>
+                                <span>{{ tech.name }}</span>
+                            </option>
                         {% endfor %}
                     </select>
                 </div>
@@ -27,7 +31,7 @@
                     <label for="teach_form">O&#8216;qitish shakli</label>
                     <select name="teach_form" id="teach_form" class="form-control" required>
                         <option value="1">Sinfxona</option>
-                        <option value="2">Zoom</option>
+                        <option value="2" {% if lesson.id == 2 %}selected {% endif %}>Zoom</option>
                     </select>
                 </div>
                 <hr>
@@ -36,7 +40,7 @@
                     <select name="couple" id="couple" class="form-control" required>
                         <option value="">Bittasini tanlang</option>
                         {% for i in range(1, 7) %}
-                            <option value="{{ i }}">{{ i }}</option>
+                            <option value="{{ i }}" {% if lesson.couple == i %}selected {% endif %}>{{ i }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -45,13 +49,15 @@
                     <select name="week_day" id="week_day" class="form-control">
                         <option value="">Kunni tanlang</option>
                         {% for day in days %}
-                            <option value="{{ day.id }}">{{ day.full_name }}</option>
+                            <option value="{{ day.id }}" {% if lesson.week_day == day.id %}selected {% endif %}>
+                                <span>{{ day.full_name }}</span>
+                            </option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="room">Xona raqami</label>
-                    <input type="text" name="room" id="room" class="form-control">
+                    <input type="number" name="room" id="room" class="form-control" value="{{ lesson.room }}">
                 </div>
                 <button type="submit" class="btn btn-primary">Qo&#8216;shish</button>
                 <button type="reset" class="btn btn-light float-right">Tozlash</button>

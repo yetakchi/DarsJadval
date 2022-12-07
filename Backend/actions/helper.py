@@ -1,40 +1,88 @@
 import calendar
 import datetime
 
-
 # Variables
 days = [
-      {
+    {
         "id": 1,
         "day_name": "Dush",
         "full_name": "Dushanba"
-      },
-      {
+    },
+    {
         "id": 2,
         "day_name": "Sesh",
         "full_name": "Seshanba"
-      },
-      {
+    },
+    {
         "id": 3,
         "day_name": "Chor",
         "full_name": "Chorshanba"
-      },
-      {
+    },
+    {
         "id": 4,
         "day_name": "Pay",
         "full_name": "Payshanba"
-      },
-      {
+    },
+    {
         "id": 5,
         "day_name": "Jum",
         "full_name": "Juma"
-      },
-      {
+    },
+    {
         "id": 6,
         "day_name": "Shan",
         "full_name": "Shanba"
-      }
-    ]
+    }
+]
+
+subject_forms = {
+    1: "Ma\u2019ruza",
+    2: "Amaliyot",
+    3: "Tajriba",
+    4: "Seminar"
+}
+
+couples = [
+    {
+        'start_time': '08:30',
+        'end_time': '09:50'
+    },
+    {
+        'start_time': '10:00',
+        'end_time': '11:20'
+    },
+    {
+        'start_time': '11:30',
+        'end_time': '12:50'
+    },
+    {
+        'start_time': '13:30',
+        'end_time': '14:50'
+    },
+    {
+        'start_time': '15:00',
+        'end_time': '16:20'
+    },
+    {
+        'start_time': '16:30',
+        'end_time': '17:50'
+    },
+]
+
+months = [
+    'yanvar',
+    'fevral',
+    'mart',
+    'aprel',
+    'may',
+    'iyun',
+    'iyul',
+    'avgust',
+    'sentyabr',
+    'oktyabr',
+    'noyabr',
+    'dekabr'
+]
 
 
 # Lessons
@@ -47,25 +95,19 @@ def current_lesson(lessons):
     t = f"{datetime.datetime.now().time()}"
 
     for lesson in lessons:
-        form(lesson)
+        lesson['teach_form'] = subject_forms[lesson['teach_form']]
         couple(lesson)
 
         lesson['active'] = lesson['start_time'] < t < lesson['end_time']
-        # lesson['isLast'] = lesson == lessons[-1]
+        lesson['isLast'] = lesson == lessons[-1]
     return lessons
 
 
 def lesson_list(lessons):
     for les in lessons:
-        form(les)
         couple(les)
 
     return lessons
-
-
-def check_subject_form(subjects):
-    for sub in subjects:
-        form(sub)
 
 
 # Date
@@ -99,58 +141,13 @@ def check_week_date(time):
 
 
 def today_date():
-    months = [
-        'yanvar',
-        'fevral',
-        'mart',
-        'aprel',
-        'may',
-        'iyun',
-        'iyul',
-        'avgust',
-        'sentyabr',
-        'oktyabr',
-        'noyabr',
-        'dekabr'
-    ]
-
     time = datetime.datetime.now()
     return str(time.day) + " - " + months[time.month - 1]
 
 
-# Private functions
-def form(item):
-    if item['form'] == 2:
-        item['form'] = "Amaliyot"
-    elif item['form'] == 3:
-        item['form'] = "Tajriba"
-    elif item['form'] == 4:
-        item['form'] = "Seminar"
-    elif item['form'] == 0:
-        item['form'] = ""
-    else:
-        item['form'] = "Ma\u2019ruza"
-
-
 def couple(lesson):
-    if lesson['couple'] == 1:
-        lesson['start_time'] = '08:30'
-        lesson['end_time'] = '09:50'
-    elif lesson['couple'] == 2:
-        lesson['start_time'] = '10:00'
-        lesson['end_time'] = '11:20'
-    elif lesson['couple'] == 3:
-        lesson['start_time'] = '11:30'
-        lesson['end_time'] = '12:50'
-    elif lesson['couple'] == 4:
-        lesson['start_time'] = '13:30'
-        lesson['end_time'] = '14:50'
-    elif lesson['couple'] == 5:
-        lesson['start_time'] = '15:00'
-        lesson['end_time'] = '16:20'
-    elif lesson['couple'] == 6:
-        lesson['start_time'] = '16:30'
-        lesson['end_time'] = '17:50'
+    lesson['start_time'] = couples[lesson['couple']]['start_time']
+    lesson['end_time'] = couples[lesson['couple']]['end_time']
 
     # lesson['start_time'] = ('0' + str(lesson['start_time']))[-8:-3] # timedelta to clock string
     # lesson['end_time'] = ('0' + str(lesson['end_time']))[-8:-3]

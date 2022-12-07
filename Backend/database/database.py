@@ -5,22 +5,22 @@ class DataBase(MYSQLConnector):
     # Lesson
     def lessons(self):
         query = "SELECT lessons.id, lessons.teach_form, lessons.couple, lessons.week_day, lessons.room, " \
-                "subjects.subject, subjects.form, teachers.teacher " \
+                "subjects.name as subject, subjects.form, teachers.name as teacher " \
                 "FROM lessons, subjects, teachers " \
-                "WHERE lessons.subject = subjects.id AND lessons.teacher = teachers.id;"
+                "WHERE lessons.subject_id = subjects.id AND lessons.teacher_id = teachers.id;"
         return self.select(query)
 
     def lesson(self, day):
         query = "SELECT lessons.id, lessons.teach_form, lessons.couple, lessons.week_day, lessons.room, " \
-                "subjects.subject, subjects.form, teachers.teacher " \
+                "subjects.name as subject, subjects.form, teachers.name as teacher " \
                 "FROM lessons, subjects, teachers " \
-                f"WHERE week_day = {day} AND lessons.subject = subjects.id AND lessons.teacher = teachers.id;"
+                f"WHERE week_day = {day} AND lessons.subject_id = subjects.id AND lessons.teacher_id = teachers.id;"
         return self.select(query)
 
     def add_lesson(self, request):
-        query = "INSERT INTO lessons(subject, teacher, teach_form, couple, week_day, room)" \
+        query = "INSERT INTO lessons(subject_id, teacher_id, teach_form, couple, week_day, room)" \
                 " VALUES(%s, %s, %s, %s, %s, %s)"
-        return self.insert(query, (request['subject'], request['teacher'], request['teach_form'],
+        return self.insert(query, (request['subject_id'], request['teacher_id'], request['teach_form'],
                                    request['couple'], request['week_day'], request['room']),
                            reply='/lessons'
                            )
