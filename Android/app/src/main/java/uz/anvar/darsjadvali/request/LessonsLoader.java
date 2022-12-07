@@ -78,5 +78,6 @@ public class LessonsLoader extends AsyncTask<String, String, String> {
         }
 
         loadListener.onLessonsLoad(lessons);
+        Global.lessons.addAll(lessons);
     }
 }

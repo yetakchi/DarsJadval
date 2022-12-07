@@ -21,7 +21,6 @@ import uz.anvar.darsjadvali.model.Lesson;
 import uz.anvar.darsjadvali.model.WeekDay;
 import uz.anvar.darsjadvali.request.Constants;
 import uz.anvar.darsjadvali.request.LessonsLoader;
-import uz.anvar.darsjadvali.request.TodayDateLoader;
 import uz.anvar.darsjadvali.request.WeekDaysLoader;
 
 
@@ -49,8 +48,8 @@ public class LessonActivity extends AppCompatActivity {
         loader = findViewById(R.id.lessons_loader);
         today = findViewById(R.id.today);
 
+        today.setText(null); // new TodayDateLoader(today).execute(Constants.url + "/today");
         setUpRecycler();
-        setTodayDate();
     }
 
     private void setUpRecycler() {
@@ -86,9 +85,5 @@ public class LessonActivity extends AppCompatActivity {
                 lessonAdapter.setLessonsList(list);
             }
         }).execute(Constants.url + path);
-    }
-
-    private void setTodayDate() {
-        new TodayDateLoader(today).execute(Constants.url + "/today");
     }
 }

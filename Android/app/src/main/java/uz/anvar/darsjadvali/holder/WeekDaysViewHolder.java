@@ -9,17 +9,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import uz.anvar.darsjadvali.R;
 
+
 public class WeekDaysViewHolder extends RecyclerView.ViewHolder {
 
     TextView day_name, day;
-    LinearLayout week_day_layout;
+    LinearLayout weekDayLayout;
 
     public WeekDaysViewHolder(@NonNull View itemView) {
         super(itemView);
 
         day_name = itemView.findViewById(R.id.day_name);
         day = itemView.findViewById(R.id.day);
-        week_day_layout = itemView.findViewById(R.id.week_day_layout);
+        weekDayLayout = itemView.findViewById(R.id.week_day_layout);
     }
 
     public void setDayName(String name) {
@@ -32,6 +33,6 @@ public class WeekDaysViewHolder extends RecyclerView.ViewHolder {
 
     public void setActive() {
         day.setTextColor(day.getContext().getResources().getColor(R.color.inactive_text));
-        week_day_layout.setBackground(week_day_layout.getResources().getDrawable(R.drawable.dr_active_text));
+        weekDayLayout.setBackgroundResource(R.drawable.dr_active_text); // context.getResources().getDrawable(R.drawable.dr_active_text)
     }
 }
