@@ -1,9 +1,11 @@
 from flask import Flask, jsonify, render_template, request, redirect
+from dotenv import dotenv_values
 from database.database import DataBase
 from actions import helper
 
 app = Flask(__name__)
 db = DataBase()
+env = dict(dotenv_values())
 
 
 @app.route('/days')
@@ -134,4 +136,4 @@ def not_found(error):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')  # $ flask run --host=0.0.0.0 (192.168.1.x)
+    app.run(debug=True, host=env['SERVER_HOST'], port=env['SERVER_PORT'])  # $ flask run --host=0.0.0.0 (192.168.1.x)
