@@ -75,5 +75,6 @@ public class WeekDaysLoader extends AsyncTask<String, String, String> {
         }
 
         loadListener.onWeekDaysLoad(daysList);
+        Global.days = daysList;
     }
 }

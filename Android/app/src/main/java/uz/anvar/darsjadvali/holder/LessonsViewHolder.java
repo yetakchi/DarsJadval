@@ -101,7 +101,7 @@ public class LessonsViewHolder extends RecyclerView.ViewHolder {
         colon.setTextColor(color);
     }
 
-    public void Invisible(int size, int id) {
+    public void setVisibility(int size, int id) {
         if (size == id && size > 1) {
             subjectLine.setVisibility(View.INVISIBLE);
             subjectLine.setAlpha(0f);

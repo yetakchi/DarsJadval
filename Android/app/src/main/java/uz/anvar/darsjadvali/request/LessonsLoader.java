@@ -1,83 +1,71 @@
 package uz.anvar.darsjadvali.request;
 
-import android.os.AsyncTask;
+import androidx.annotation.NonNull;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Headers;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import uz.anvar.darsjadvali.adapter.OnDataLoadListener;
 import uz.anvar.darsjadvali.model.Lesson;
-import uz.anvar.darsjadvali.utils.Global;
 
 
-public class LessonsLoader extends AsyncTask<String, String, String> {
+public class LessonsLoader {
 
     private final OnDataLoadListener loadListener;
 
+    private final OkHttpClient client = new OkHttpClient();
+    private final Gson gson = new Gson();
+
+    private final Type type = new TypeToken<ArrayList<Lesson>>() {
+    }.getType();
+
     public LessonsLoader(OnDataLoadListener listener) {
-        super();
         loadListener = listener;
     }
 
-    @Override
-    protected String doInBackground(String... strings) {
-        try {
-            URL url = new URL(strings[0]);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            InputStream input = connection.getInputStream();
-            String result = Global.ReadStream(input);
-            connection.disconnect();
-            input.close();
+    public void onPostExecute(String path) {
+        Request request = new Request.Builder()
+                .url(Constants.API_URL + path)
+                .build();
 
-            return result;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                try (ResponseBody responseBody = response.body()) {
+                    if (!response.isSuccessful())
+                        throw new IOException("Unexpected code " + response);
 
-    @Override
-    protected void onPostExecute(String s) {
-        super.onPostExecute(s);
+                    Headers responseHeaders = response.headers();
+                    for (int i = 0, size = responseHeaders.size(); i < size; i++) {
+                        System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                    }
 
-        setLessonsList(s);
-    }
+                    assert responseBody != null;
+                    String body = responseBody.string();
+                    if (body.isEmpty())
+                        return;
 
-    private void setLessonsList(String string) {
-        if (string == null || string.isEmpty())
-            return;
-
-        ArrayList<Lesson> lessons = new ArrayList<>();
-        try {
-            JSONArray jsonArray = new JSONArray(string);
-            JSONObject json;
-            for (int i = 0; i < jsonArray.length(); i++) {
-                json = jsonArray.getJSONObject(i);
-                lessons.add(new Lesson(
-                        i + 1,
-                        json.getString("subject"),
-                        json.getString("form"),
-                        json.getString("teacher"),
-                        json.getInt("teach_form"),
-                        json.getString("start_time"),
-                        json.getString("end_time"),
-                        "",
-                        json.getString("room"),
-                        json.getBoolean("active")
-                ));
+                    List<Lesson> lessons = gson.fromJson(body, type);
+                    loadListener.onLessonsLoad(lessons);
+                }
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
-        loadListener.onLessonsLoad(lessons);
-        Global.lessons.addAll(lessons);
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

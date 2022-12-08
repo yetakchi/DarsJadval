@@ -26,13 +26,13 @@ import uz.anvar.darsjadvali.request.WeekDaysLoader;
 
 public class LessonActivity extends AppCompatActivity {
 
-    public RecyclerView lessonsRecycler, weekDaysRecycler;
-    public TextView today;
+    private RecyclerView lessonsRecycler, weekDaysRecycler;
+    private TextView today;
 
     @SuppressLint("StaticFieldLeak")
     public static ProgressBar loader;
 
-    public LessonAdapter lessonAdapter;
+    private LessonAdapter lessonAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,6 @@ public class LessonActivity extends AppCompatActivity {
         loader = findViewById(R.id.lessons_loader);
         today = findViewById(R.id.today);
 
-        today.setText(null); // new TodayDateLoader(today).execute(Constants.url + "/today");
         setUpRecycler();
     }
 
@@ -57,21 +56,19 @@ public class LessonActivity extends AppCompatActivity {
             LessonActivity.loader.setVisibility(View.VISIBLE);
             LessonActivity.this.lessonLoader("/lessons/" + id);
         });
-
-        RecyclerView.LayoutManager manager1 = new LinearLayoutManager(LessonActivity.this, RecyclerView.HORIZONTAL, false);
-        weekDaysRecycler.setLayoutManager(manager1);
+        weekDaysRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         weekDaysRecycler.setAdapter(adapter);
 
         new WeekDaysLoader(new OnDataLoadListener() {
             @Override
             public void onWeekDaysLoad(List<WeekDay> list) {
                 adapter.setList(list);
+//                today.setText(Global.days.stream().filter(WeekDay::isActive).findAny().get().getDayName());
             }
-        }).execute(Constants.url + "/days");
+        }).execute(Constants.API_URL + "/days");
 
         lessonAdapter = new LessonAdapter(this, new ArrayList<>());
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-        lessonsRecycler.setLayoutManager(manager);
+        lessonsRecycler.setLayoutManager(new LinearLayoutManager(this));
         lessonsRecycler.setAdapter(lessonAdapter);
 
         lessonLoader("/lessons/auto");
@@ -81,9 +78,11 @@ public class LessonActivity extends AppCompatActivity {
         new LessonsLoader(new OnDataLoadListener() {
             @Override
             public void onLessonsLoad(List<Lesson> list) {
-                LessonActivity.loader.setVisibility(View.GONE);
-                lessonAdapter.setLessonsList(list);
+                runOnUiThread(() -> {
+                    LessonActivity.loader.setVisibility(View.GONE);
+                    lessonAdapter.setLessonsList(list);
+                });
             }
-        }).execute(Constants.url + path);
+        }).onPostExecute(path);
     }
 }

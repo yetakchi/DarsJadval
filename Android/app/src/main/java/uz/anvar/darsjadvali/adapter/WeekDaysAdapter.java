@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import uz.anvar.darsjadvali.R;
@@ -19,13 +20,14 @@ import uz.anvar.darsjadvali.model.WeekDay;
 public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysViewHolder> {
 
     private final Context context;
-    private final List<WeekDay> days;
+
     private final OnItemClickListener onItemClickListener;
+    private final ArrayList<WeekDay> days = new ArrayList<>();
 
     public WeekDaysAdapter(Context context, List<WeekDay> days, OnItemClickListener onItemClickListener) {
-        this.context = context;
-        this.days = days;
         this.onItemClickListener = onItemClickListener;
+        this.context = context;
+        this.days.addAll(days);
     }
 
     @NonNull
@@ -55,7 +57,6 @@ public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysViewHolder> {
     public void setList(List<WeekDay> list) {
         this.days.clear();
         this.days.addAll(list);
-
         this.notifyDataSetChanged();
     }
 }

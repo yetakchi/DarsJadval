@@ -13,11 +13,13 @@ import java.util.Collections;
 import java.util.List;
 
 import uz.anvar.darsjadvali.model.Lesson;
+import uz.anvar.darsjadvali.model.WeekDay;
 
 
 public class Global {
 
     public static List<Lesson> lessons = Collections.emptyList();
+    public static List<WeekDay> days = Collections.emptyList();
 
     public static String ReadStream(InputStream stream) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));

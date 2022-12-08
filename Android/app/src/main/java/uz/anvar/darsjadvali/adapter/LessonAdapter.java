@@ -58,7 +58,7 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonsViewHolder> {
         holder.setLessonImage(lessons.get(position).getImageSource());
 
         holder.setActive(lessons.get(position).isActive());
-        holder.Invisible(lessons.size(), lessons.get(position).getId());
+        holder.setVisibility(lessons.size(), lessons.get(position).getId());
 
         // Set TextView Drawables
         holder.setTextDrawables(lessons.get(position).getImageResource());
@@ -69,7 +69,7 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonsViewHolder> {
     @SuppressLint("NotifyDataSetChanged")
     public void setLessonsList(List<Lesson> lessonsList) {
         lessons = lessonsList;
-        Global.lessons = lessonsList;
+        Global.lessons = lessonsList; // Global.lessons.addAll(lessons);
         this.notifyDataSetChanged();
     }
 }

@@ -2,9 +2,10 @@ package uz.anvar.darsjadvali.model;
 
 public class WeekDay {
 
-    int id;
-    String day, day_name;
-    boolean active;
+    private final int id;
+    private final String day;
+    private final String day_name;
+    private final boolean active;
 
     public WeekDay(int id, String day, String day_name, boolean active) {
         this.id = id;
@@ -15,10 +16,6 @@ public class WeekDay {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getDay() {
