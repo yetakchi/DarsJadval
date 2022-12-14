@@ -69,8 +69,8 @@ public class LessonsViewHolder extends RecyclerView.ViewHolder {
         // lesson_img.setImageResource();
     }
 
-    public void addOnClickListener(Context context, String number) {
-        lessonCard.setOnClickListener(v -> Toast.makeText(context, number, Toast.LENGTH_SHORT).show());
+    public void addOnClickListener(Context context, int number) {
+        lessonCard.setOnClickListener(v -> Toast.makeText(context, String.valueOf(number), Toast.LENGTH_SHORT).show());
     }
 
     public void setActive(boolean isActive) {

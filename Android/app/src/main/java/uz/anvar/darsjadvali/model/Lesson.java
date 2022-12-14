@@ -1,25 +1,38 @@
 package uz.anvar.darsjadvali.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Collections;
 
 import uz.anvar.darsjadvali.R;
 
+
 public class Lesson {
 
     private final int id;
+    @SerializedName("teach_form")
     private final String teachForm;
-    private final String subject, teacher, form, startTime, endTime, imgSrc, roomNumber;
+    private final String subject, teacher, form;
+    @SerializedName("start_time")
+    private final String startTime;
+    @SerializedName("end_time")
+    private final String endTime;
+
+    @SerializedName("img_src")
+    private final String imgSrc;
+    @SerializedName("room")
+    private final int roomNumber;
     private final boolean active;
 
-    public Lesson(int id, String subject, String form, String teacher, String teach_form, String start_time, String end_time, String img_src, String number, boolean active) {
+    public Lesson(int id, String subject, String form, String teacher, String teachForm, String startTime, String endTime, String imgSrc, int number, boolean active) {
         this.id = id;
         this.subject = subject;
         this.form = form;
         this.teacher = teacher;
-        this.teachForm = teach_form;
-        this.startTime = start_time;
-        this.endTime = end_time;
-        this.imgSrc = img_src;
+        this.teachForm = teachForm;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.imgSrc = imgSrc;
         this.roomNumber = number;
         this.active = active;
     }
@@ -33,7 +46,7 @@ public class Lesson {
     }
 
     public String getForm() {
-        return form.concat(" dar si");
+        return form; // .concat("dar+si")
     }
 
     public String getTeacher() {
@@ -60,7 +73,7 @@ public class Lesson {
         return TeachForm.IMG(Collections.emptyList().size());
     }
 
-    public String getRoomNumber() {
+    public int getRoomNumber() {
         return roomNumber;
     }
 
