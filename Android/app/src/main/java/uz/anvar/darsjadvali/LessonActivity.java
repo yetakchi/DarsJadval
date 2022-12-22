@@ -2,37 +2,29 @@ package uz.anvar.darsjadvali;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import com.google.android.material.tabs.TabLayout;
+
 import java.util.List;
 
-import uz.anvar.darsjadvali.adapter.LessonAdapter;
 import uz.anvar.darsjadvali.adapter.OnDataLoadListener;
 import uz.anvar.darsjadvali.adapter.WeekDaysAdapter;
-import uz.anvar.darsjadvali.model.Lesson;
 import uz.anvar.darsjadvali.model.WeekDay;
 import uz.anvar.darsjadvali.request.Constants;
-import uz.anvar.darsjadvali.request.LessonsLoader;
 import uz.anvar.darsjadvali.request.WeekDaysLoader;
 
 
 public class LessonActivity extends AppCompatActivity {
 
-    private RecyclerView lessonsRecycler, weekDaysRecycler;
-    private TextView today;
+    private TabLayout weekDays;
+    private ViewPager lessonLayout;
 
     @SuppressLint("StaticFieldLeak")
-    public static ProgressBar loader;
-
-    private LessonAdapter lessonAdapter;
+    private TextView today;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,46 +35,26 @@ public class LessonActivity extends AppCompatActivity {
     }
 
     private void setContentActivity() {
-        weekDaysRecycler = findViewById(R.id.week_days);
-        lessonsRecycler = findViewById(R.id.lessons);
-        loader = findViewById(R.id.lessons_loader);
+        weekDays = findViewById(R.id.tab_layout_week_days);
+        lessonLayout = findViewById(R.id.view_pager_lessons);
         today = findViewById(R.id.today);
 
-        setUpRecycler();
-    }
-
-    private void setUpRecycler() {
-        WeekDaysAdapter adapter = new WeekDaysAdapter(LessonActivity.this, Collections.emptyList(), id -> {
-            LessonActivity.loader.setVisibility(View.VISIBLE);
-            LessonActivity.this.lessonLoader("/lessons/" + id);
-        });
-        weekDaysRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        weekDaysRecycler.setAdapter(adapter);
+        today.setText(getString(R.string.today));
 
         new WeekDaysLoader(new OnDataLoadListener() {
             @Override
             public void onWeekDaysLoad(List<WeekDay> list) {
-                adapter.setList(list);
-//                today.setText(Global.days.stream().filter(WeekDay::isActive).findAny().get().getDayName());
+                LessonActivity.this.onWeekDaysLoad(list);
             }
         }).execute(Constants.API_URL + "/days");
-
-        lessonAdapter = new LessonAdapter(this, new ArrayList<>());
-        lessonsRecycler.setLayoutManager(new LinearLayoutManager(this));
-        lessonsRecycler.setAdapter(lessonAdapter);
-
-        lessonLoader("/lessons/auto");
     }
 
-    private void lessonLoader(String path) {
-        new LessonsLoader(new OnDataLoadListener() {
-            @Override
-            public void onLessonsLoad(List<Lesson> list) {
-                runOnUiThread(() -> {
-                    LessonActivity.loader.setVisibility(View.GONE);
-                    lessonAdapter.setLessonsList(list);
-                });
-            }
-        }).onPostExecute(path);
+    private void onWeekDaysLoad(List<WeekDay> list) {
+        WeekDaysAdapter adapter = new WeekDaysAdapter(this, weekDays, list, getSupportFragmentManager());
+
+        lessonLayout.setAdapter(adapter);
+        weekDays.setupWithViewPager(lessonLayout);
+
+        adapter.setTabLayoutTabs(list);
     }
 }

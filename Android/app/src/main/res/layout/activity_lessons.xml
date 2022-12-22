@@ -50,8 +50,8 @@
             android:textSize="20sp" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/week_days"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout_week_days"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginHorizontal="20dp"
@@ -59,11 +59,16 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        tools:listitem="@layout/week_day" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/lessons"
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout="@layout/week_day" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager_lessons"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginHorizontal="20dp"
@@ -72,21 +77,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/week_days"
-        tools:listitem="@layout/lesson_item">
-
-    </androidx.recyclerview.widget.RecyclerView>
-
-    <ProgressBar
-        android:id="@+id/lessons_loader"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        app:layout_constraintBottom_toBottomOf="@+id/lessons"
-        app:layout_constraintEnd_toEndOf="@+id/lessons"
-        app:layout_constraintHorizontal_bias="0.467"
-        app:layout_constraintStart_toStartOf="@+id/lessons"
-        app:layout_constraintTop_toTopOf="@+id/lessons" />
+        app:layout_constraintTop_toBottomOf="@+id/tab_layout_week_days" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -107,7 +98,7 @@
             android:text="@string/home"
             android:textAlignment="center"
             android:textColor="@color/white"
-            app:drawableTopCompat="@drawable/ic_shop" />
+            app:drawableTopCompat="@drawable/ic_home" />
 
         <TextView
             android:layout_width="wrap_content"

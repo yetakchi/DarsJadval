@@ -5,30 +5,31 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import uz.anvar.darsjadvali.R;
+import uz.anvar.darsjadvali.adapter.OnItemClickListener;
+import uz.anvar.darsjadvali.model.WeekDay;
 
 
-public class WeekDaysViewHolder extends RecyclerView.ViewHolder {
+public class WeekDaysView {
 
-    TextView day_name, day;
-    LinearLayout weekDayLayout;
+    private final TextView day;
+    private final LinearLayout weekDayLayout;
 
-    public WeekDaysViewHolder(@NonNull View itemView) {
-        super(itemView);
+    public View view;
 
-        day_name = itemView.findViewById(R.id.day_name);
+    public WeekDaysView(@NonNull View itemView, WeekDay weekDay, final OnItemClickListener onItemClickListener) {
+        TextView day_name = itemView.findViewById(R.id.day_name);
         day = itemView.findViewById(R.id.day);
         weekDayLayout = itemView.findViewById(R.id.week_day_layout);
-    }
 
-    public void setDayName(String name) {
-        day_name.setText(name);
-    }
+        day_name.setText(weekDay.getDayName());
+        day.setText(weekDay.getDay());
 
-    public void setDay(String num) {
-        day.setText(num);
+        view = itemView;
+
+        if (weekDay.isActive())
+            setActive();
     }
 
     public void setActive() {

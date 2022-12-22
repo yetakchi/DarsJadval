@@ -1,62 +1,76 @@
 package uz.anvar.darsjadvali.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import uz.anvar.darsjadvali.LessonFragment;
 import uz.anvar.darsjadvali.R;
-import uz.anvar.darsjadvali.holder.WeekDaysViewHolder;
+import uz.anvar.darsjadvali.holder.WeekDaysView;
 import uz.anvar.darsjadvali.model.WeekDay;
 
 
-public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysViewHolder> {
+public class WeekDaysAdapter extends FragmentPagerAdapter {
 
     private final Context context;
+    private final TabLayout tabLayout;
 
-    private final OnItemClickListener onItemClickListener;
     private final ArrayList<WeekDay> days = new ArrayList<>();
 
-    public WeekDaysAdapter(Context context, List<WeekDay> days, OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
+    public WeekDaysAdapter(Context context, TabLayout tabLayout, List<WeekDay> days, FragmentManager fm) {
+        super(fm, FragmentPagerAdapter.BEHAVIOR_SET_USER_VISIBLE_HINT);
         this.context = context;
+        this.tabLayout = tabLayout;
         this.days.addAll(days);
     }
 
     @NonNull
     @Override
-    public WeekDaysViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.week_day, parent, false);
-        return new WeekDaysViewHolder(view);
+    public Fragment getItem(int position) {
+        return new LessonFragment(position);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull WeekDaysViewHolder holder, int position) {
-        holder.setDayName(days.get(position).getDayName());
-        holder.setDay(days.get(position).getDay());
-
-        holder.itemView.setOnClickListener(v -> onItemClickListener.onClick(days.get(position).getId()));
-
-        if (days.get(position).isActive())
-            holder.setActive();
-    }
-
-    @Override
-    public int getItemCount() {
+    public int getCount() {
         return days.size();
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void setList(List<WeekDay> list) {
-        this.days.clear();
-        this.days.addAll(list);
-        this.notifyDataSetChanged();
+    public void setTabLayoutTabs(List<WeekDay> list) {
+        TabLayout.Tab tab;
+        for (int i = 0; i < getCount(); i++) {
+            tab = tabLayout.getTabAt(i);
+            if (tab != null) {
+                tab.setCustomView(onCreateViewHolder(null, list.get(i)));
+            }
+        }
+    }
+
+    @NonNull
+    public View onCreateViewHolder(ViewGroup parent, WeekDay day) {
+        View view = LayoutInflater.from(context).inflate(R.layout.week_day, parent, false);
+        WeekDaysView holder = new WeekDaysView(view, day, id -> {});
+
+        return holder.view;
+    }
+
+
+    public void onBindViewHolder(@NonNull WeekDaysView holder) {
+        {
+            TabLayout.Tab tab = tabLayout.newTab();
+            tab.setCustomView(onCreateViewHolder(null, null));
+            tabLayout.addTab(tab);
+        }
     }
 }

@@ -9,7 +9,7 @@
     <string name="theme">Ma&#8217;ruza darsi</string>
     <string name="teacher">Davron</string>
     <string name="teach_format">Sinfxonada</string>
-    <string name="date">Sana ...</string>
+    <string name="date">Sana &#46;&#46;&#46;</string>
     <string name="start_time">9:30</string>
     <string name="end_time">10:20</string>
 
@@ -21,6 +21,6 @@
     <string name="lessons">Darslar</string>
     <string name="chat">Suhbat</string>
 
-    <string name="loading">Yuklanmoqda ...</string>
+    <string name="loading">Yuklanmoqda &#46;&#46;&#46;</string>
     <string name="group_name">942&#8211;19</string>
 </resources>
