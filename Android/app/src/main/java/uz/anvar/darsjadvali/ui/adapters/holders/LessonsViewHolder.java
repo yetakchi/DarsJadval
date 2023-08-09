@@ -1,6 +1,5 @@
-package uz.anvar.darsjadvali.holder;
+package uz.anvar.darsjadvali.ui.adapters.holders;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
 import android.view.animation.Animation;
@@ -8,22 +7,22 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import uz.anvar.darsjadvali.R;
+import uz.anvar.darsjadvali.app.model.Lesson;
 
 
 public class LessonsViewHolder extends RecyclerView.ViewHolder {
 
-    TextView startTime, endTime, colon;
-    TextView subject, teacher, theme, teachForm;
-    ImageView lessonImg, subjectLine;
-    CardView lessonCard;
-    RadioButton activeSubject;
+    private final TextView startTime, endTime, colon;
+    private final TextView subject, teacher, theme, teachForm;
+    private final ImageView lessonImg, subjectLine;
+    private final CardView lessonCard;
+    private final RadioButton activeSubject;
 
     public LessonsViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -41,36 +40,23 @@ public class LessonsViewHolder extends RecyclerView.ViewHolder {
         subjectLine = itemView.findViewById(R.id.subject_line);
     }
 
-    public void setSubject(String name) {
-        subject.setText(name);
+    public void setContent(Lesson lesson) {
+        theme.setText(lesson.getForm());
+        subject.setText(lesson.getSubject());
+        teacher.setText(lesson.getTeacher());
+        teachForm.setText(lesson.getTeachForm());
+        startTime.setText(lesson.getStartTime());
+        endTime.setText(lesson.getEndTime());
+
+        // lesson_img.setImageResource(lesson.getImageSource());
+
+        this.setActive(lesson.isActive());
+
+        teachForm.setCompoundDrawablesWithIntrinsicBounds(lesson.getImageResource(), 0, 0, 0);
     }
 
-    public void setTeacher(String name) {
-        teacher.setText(name);
-    }
-
-    public void setForm(String name) {
-        theme.setText(name);
-    }
-
-    public void setTeachForm(String format) {
-        teachForm.setText(format);
-    }
-
-    public void setStartTime(String time) {
-        startTime.setText(time);
-    }
-
-    public void setEndTime(String time) {
-        endTime.setText(time);
-    }
-
-    public void setLessonImage(String src) {
-        // lesson_img.setImageResource();
-    }
-
-    public void addOnClickListener(Context context, int number) {
-        lessonCard.setOnClickListener(v -> Toast.makeText(context, String.valueOf(number), Toast.LENGTH_SHORT).show());
+    public void addOnClickListener(final OnItemClickListener listener) {
+        lessonCard.setOnClickListener(v -> listener.onClick());
     }
 
     public void setActive(boolean isActive) {
@@ -111,10 +97,6 @@ public class LessonsViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public void setTextDrawables(int res) {
-        teachForm.setCompoundDrawablesWithIntrinsicBounds(res, 0, 0, 0);
-    }
-
     public void setAnimation(int position) {
         Animation animation = AnimationUtils.loadAnimation(lessonCard.getContext(), R.anim.card_fade);
         animation.setStartOffset(position * 500L + 100);
@@ -127,5 +109,9 @@ public class LessonsViewHolder extends RecyclerView.ViewHolder {
         Animation line = AnimationUtils.loadAnimation(subjectLine.getContext(), R.anim.line);
         line.setStartOffset(position * 1000L);
         subjectLine.setAnimation(line);
+    }
+
+    public interface OnItemClickListener {
+        void onClick();
     }
 }

@@ -1,15 +1,21 @@
-package uz.anvar.darsjadvali;
+package uz.anvar.darsjadvali.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import uz.anvar.darsjadvali.utils.Global;
+import uz.anvar.darsjadvali.R;
+import uz.anvar.darsjadvali.ui.components.DialogCollection;
+import uz.anvar.darsjadvali.ui.lesson.LessonActivity;
 
 
+@SuppressLint("CustomSplashScreen")
 public class LaunchActivity extends AppCompatActivity {
+
+    private final DialogCollection alert = new DialogCollection();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +31,9 @@ public class LaunchActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Global.dialog(this, this);
+        // Agar birinchi ekran bo'lsa finish()
+        // Har qanday o'tishlardan ham keyin finishAffinity(); or System.exit(0);
+        alert.show(this, this::finish);
     }
 
     //    ViewFlipper includes;

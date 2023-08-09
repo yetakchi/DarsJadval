@@ -1,4 +1,4 @@
-package uz.anvar.darsjadvali.model;
+package uz.anvar.darsjadvali.app.model;
 
 import com.google.gson.annotations.SerializedName;
 

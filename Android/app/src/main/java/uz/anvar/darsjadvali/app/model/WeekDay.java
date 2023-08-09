@@ -1,4 +1,5 @@
-package uz.anvar.darsjadvali.model;
+package uz.anvar.darsjadvali.app.model;
+
 
 public class WeekDay {
 

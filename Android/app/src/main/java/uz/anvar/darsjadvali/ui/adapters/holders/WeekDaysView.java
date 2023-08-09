@@ -1,4 +1,4 @@
-package uz.anvar.darsjadvali.holder;
+package uz.anvar.darsjadvali.ui.adapters.holders;
 
 import android.view.View;
 import android.widget.LinearLayout;
@@ -7,8 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import uz.anvar.darsjadvali.R;
-import uz.anvar.darsjadvali.adapter.OnItemClickListener;
-import uz.anvar.darsjadvali.model.WeekDay;
+import uz.anvar.darsjadvali.app.model.WeekDay;
 
 
 public class WeekDaysView {
@@ -18,7 +17,7 @@ public class WeekDaysView {
 
     public View view;
 
-    public WeekDaysView(@NonNull View itemView, WeekDay weekDay, final OnItemClickListener onItemClickListener) {
+    public WeekDaysView(@NonNull View itemView, WeekDay weekDay) {
         TextView day_name = itemView.findViewById(R.id.day_name);
         day = itemView.findViewById(R.id.day);
         weekDayLayout = itemView.findViewById(R.id.week_day_layout);
