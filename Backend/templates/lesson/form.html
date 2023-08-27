@@ -4,7 +4,7 @@
     <div class="container">
         <div>
             <h2>Dars qo&#8216;shish</h2><br>
-            <form action="/lessons" method="{{ 'PUT' if(lesson) else 'POST' }}">
+            <form action="{{ action }}" method="POST">
                 <div class="form-group">
                     <label for="subject_id">Fan nomi</label>
                     <select name="subject_id" id="subject_id" class="form-control" required>
@@ -59,6 +59,9 @@
                     <label for="room">Xona raqami</label>
                     <input type="number" name="room" id="room" class="form-control" value="{{ lesson.room }}">
                 </div>
+                {% if (lesson) %}
+                    <input type="hidden" name="_method" value="PUT">
+                {% endif %}
                 <button type="submit" class="btn btn-primary">Qo&#8216;shish</button>
                 <button type="reset" class="btn btn-light float-right">Tozlash</button>
             </form>

@@ -7,27 +7,43 @@
             <div class="card-body">
                 <table class="table">
                     <thead>
-                    <tr>
-                        <th>Fan</th>
-                        <th>Fan nomi</th>
-                        <th>Dars shakli</th>
-                        <th><span>Ko&#8216;proq</span></th>
-                    </tr>
+                        <tr>
+                            <th>Fan</th>
+                            <th>Fan nomi</th>
+                            <th>Dars shakli</th>
+                            <th><span>Ko&#8216;proq</span></th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {% for sub in subjects %}
-                        <tr>
-                            <td>{{ sub.id }}</td>
-                            <td>{{ sub.name }}</td>
-                            <td>{{ sub.form }}</td>
-                            <td>
-                                <a href="/subjects/{{ sub.id }}/detail" class="btn btn-info"><span>Ko&#8216;rish</span></a>
-                            </td>
-                        </tr>
-                    {% endfor %}
+                        {% for sub in subjects %}
+                            <tr>
+                                <td>{{ sub.id }}</td>
+                                <td>{{ sub.name }}</td>
+                                <td>{{ sub.form }}</td>
+                                <td>
+                                    <a href="{{ url_for('subject_detail', idx=sub.id) }}" class="btn btn-info"><span>Ko&#8216;rish</span></a>
+                                    <form action="{{ url_for('subject_update_delete', idx=sub.id) }}" method="POST"
+                                          onsubmit="onSubmit(this); return false" class="d-inline">
+                                        <button type="submit" class="btn btn-danger"><span>O&#8216;chirish</span>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    {% block scripts %}
+        <!--suppress JSUnresolvedVariable -->
+        <script>
+            function onSubmit(form) {
+                alertify.confirm('Ma\u2019lumotni o\u{2018}chirish', 'Buni o\u{2018}chirib tashlamoqchimisiz?', () => {
+                    form.submit()
+                }, undefined)
+                    .set('labels', {ok: 'Ha', cancel: 'Bekor'});
+            }
+        </script>
+    {% endblock %}
 {% endblock %}

@@ -1,11 +1,22 @@
-from flask import Flask, jsonify, render_template, request, redirect
-from dotenv import dotenv_values
-from database.database import DataBase
+from flask import Flask, jsonify, render_template, request, redirect, url_for
+
 from actions import helper
+from app.repositories import TeacherRepository, SubjectRepository, LessonRepository
+from config import SERVER_HOST, SERVER_PORT
+from database import immutable
 
 app = Flask(__name__)
-db = DataBase()
-env = dict(dotenv_values())
+
+teacher_repo = TeacherRepository()
+subject_repo = SubjectRepository()
+lesson_repo = LessonRepository()
+
+
+@app.before_request
+def hook():
+    if request.form.get("_method"):
+        request.method = request.form.get("_method")
+        request.environ['REQUEST_METHOD'] = request.form.get("_method")
 
 
 @app.route('/days')
@@ -14,120 +25,143 @@ def days():
     return jsonify(result)
 
 
-@app.route('/lessons/auto')
+@app.get('/lessons/auto')
 def lessons():
-    return redirect(helper.auto_lesson())
+    weekday = helper.auto_lesson()
+    return redirect(f"/lessons/{weekday + 1}")
 
 
-@app.route('/lessons/<int:day>')
+@app.get('/lessons/<int:day>')
 def current_lesson(day):
-    return jsonify(helper.current_lesson(db.lesson(day)))
+    return jsonify(helper.current_lesson(lesson_repo.get_today_lessons(day)))
 
 
-@app.route('/today')
+@app.get('/today')
 def today():
     return helper.today_date()
 
 
 # Templates, admin side
-@app.route('/')
+@app.get('/')
 def index():
     return render_template('index.html')
 
 
-@app.route('/about-us')
+@app.get('/about-us')
 def about():
     return render_template('about.html')
 
 
 # Lessons
-@app.route('/lessons')
+@app.get('/lessons')
 def lesson_list():
     return render_template('lesson/index.html',
-                           lessons=helper.lesson_list(db.lessons()),
-                           subject_forms=helper.subject_forms
+                           lessons=helper.lesson_list(lesson_repo.lessons()),
+                           subject_forms=immutable.subject_forms
                            )
 
 
-@app.route('/lessons/create')
-@app.route('/lessons/<int:lesson>/detail')
-def add_lesson(lesson=0):
+@app.get('/lessons/create')
+@app.get('/lessons/<int:idx>/detail')
+def lesson_addup(idx=0):
     data = {
-        'subjects': db.subjects(),
-        'teachers': db.teachers(),
-        'days': helper.days,
-        'subject_forms': helper.subject_forms,
-        'lesson': db.lesson_detail(lesson) if lesson else {},
+        'subjects': subject_repo.all(),
+        'teachers': teacher_repo.all(),
+        'days': immutable.days,
+        'subject_forms': immutable.subject_forms,
+        'action': 'lessons'
     }
+    if idx:
+        data.update({
+            'lesson': lesson_repo.get(idx),
+            'action': url_for('lesson_update_delete', idx=idx)
+        })
+    else:
+        data.update({'lesson': {}})
 
     return render_template("lesson/form.html", **data)
 
 
-@app.route('/lessons', methods=['POST', 'PUT'])
-def upsert_lesson():
+@app.post('/lessons')
+def lesson_create():
+    lesson_repo.create(request.form)
+    return redirect('/lessons')
+
+
+@app.route('/lessons/<int:idx>', methods=['PUT', 'DELETE', 'POST'])
+def lesson_update_delete(idx):
     if request.method == 'PUT':
-        return redirect('/lessons')
-    return redirect(db.add_lesson(request.form))
+        lesson_repo.update(idx, dict(request.form))
+    else:
+        lesson_repo.delete(idx)
 
-
-@app.route('/lessons/<int:lesson>/delete', methods=['DELETE'])
-def delete_lesson(lesson):
-    return redirect(db.delete_lesson(lesson))
+    return redirect('/lessons')
 
 
 # Subjects
 @app.route('/subjects')
 def subject_list():
-    return render_template('subject/index.html', subjects=db.subjects())
+    return render_template('subject/index.html', subjects=subject_repo.all())
 
 
-@app.route('/subjects/create')
-@app.route('/subjects/<int:subject>/detail')
-def create_subject(subject=0):
-    if subject:
-        subject = db.subject_detail(subject)
+@app.get('/subjects/create')
+@app.post('/subjects')
+def subject_create():
+    if request.method == 'GET':
+        return render_template('subject/form.html',
+                               forms=immutable.subject_forms, subject={},
+                               action=url_for('subject_create', _method="POST")
+                               )
+    subject_repo.create(request.form)
+    return redirect('/subjects')
+
+
+@app.get('/subjects/<int:idx>')
+def subject_detail(idx):
+    subject = subject_repo.get(idx)
+    return render_template('subject/form.html', forms=immutable.subject_forms,
+                           subject=subject, action=url_for('subject_update_delete', idx=idx))
+
+
+@app.route('/subjects/<int:idx>', methods=['PUT', 'DELETE', 'POST'])
+def subject_update_delete(idx):
+    if request.method == "PUT":
+        subject_repo.update(idx, request.form)
     else:
-        subject = {}
-    return render_template('subject/form.html', forms=helper.subject_forms, subject=subject)
+        subject_repo.delete(idx)
 
-
-@app.route('/subjects', methods=['POST', 'PUT'])
-def upsert_subject():
-    return redirect(db.add_subject(request.form))
-
-
-@app.route('/subjects/<int:subject>', methods=['DELETE'])
-def delete_subject(subject):
-    return db.delete_subject(subject)
+    return redirect('/subjects')
 
 
 # Teachers
-@app.route('/teachers/create', methods=['GET', 'POST'])
-def add_teacher():
+@app.get('/teachers')
+def teacher_list():
+    return render_template('teacher/index.html', teachers=teacher_repo.all())
+
+
+@app.get('/teachers/create')
+@app.post('/teachers')
+def teacher_add():
     if request.method == 'GET':
         return render_template('teacher/form.html')
 
-    return redirect(db.add_teacher(request.form))
+    teacher_repo.create(request.form)
+    return redirect('/teachers')
 
 
-@app.route('/teachers')
-def teacher_list():
-    return render_template('teacher/index.html', teachers=db.teachers())
+@app.get('/teachers/<int:idx>')
+def teacher_detail(idx):
+    return render_template('teacher/detail.html', teacher=teacher_repo.get(idx))
 
 
-@app.route('/teachers/<int:teacher>/detail')
-def teacher_detail(teacher):
-    return render_template('teacher/detail.html', teacher=db.teacher_detail(teacher))
+@app.route('/teachers/<int:idx>', methods=['PUT', 'DELETE', 'POST'])
+def teacher_update_delete(idx):
+    if request.method == "PUT":
+        teacher_repo.update(idx, request.form)
+    else:
+        teacher_repo.delete(idx)
 
-
-@app.route('/teachers/<int:teacher>', methods=['PUT'])
-def teacher_update(teacher):
-    return redirect(db.update_teacher(teacher, request.form))
-
-
-@app.route('/teachers/<int:teacher>', methods=['DELETE'])
-def teacher_delete(teacher):
-    return redirect(db.delete_teacher(teacher))
+    return redirect('/teachers')
 
 
 @app.errorhandler(404)
@@ -136,4 +170,5 @@ def not_found(error):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host=env['SERVER_HOST'], port=env['SERVER_PORT'])  # $ flask run --host=0.0.0.0 (192.168.1.x)
+    # $ flask run --host=0.0.0.0 (192.168.1.x)
+    app.run(debug=True, host=SERVER_HOST, port=SERVER_PORT)

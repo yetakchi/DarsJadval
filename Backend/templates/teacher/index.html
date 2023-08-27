@@ -7,25 +7,46 @@
             <div class="card-body">
                 <table class="table">
                     <thead>
-                    <tr>
-                        <th>O&#8216;qituvchi</th>
-                        <th>O&#8216;qituvchi F.I.</th>
-                        <th width="1px"><span>Ko&#8216;proq</span></th>
-                    </tr>
+                        <tr>
+                            <th>O&#8216;qituvchi</th>
+                            <th>O&#8216;qituvchi F.I.</th>
+                            <th width="250px"><span>Ko&#8216;proq</span></th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {% for tech in teachers %}
-                        <tr>
-                            <td>{{ tech.id }}</td>
-                            <td>{{ tech.name }}</td>
-                            <td>
-                                <a href="/teachers/{{ tech.id }}/detail" class="btn btn-info"><span>Ko&#8216;rish</span></a>
-                            </td>
-                        </tr>
-                    {% endfor %}
+                        {% for teacher in teachers %}
+                            <tr>
+                                <td>{{ teacher.id }}</td>
+                                <td>{{ teacher.name }}</td>
+                                <td>
+                                    <a href="{{ url_for('teacher_detail', idx=teacher.id) }}" class="btn btn-info">
+                                        <span>Ko&#8216;rish</span>
+                                    </a>
+                                    <form action="{{ url_for('teacher_update_delete', idx=teacher.id) }}" method="POST"
+                                          onsubmit="return onSubmit()" class="d-inline-block">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="btn btn-danger">
+                                            <span>O&#8216;chirish</span>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    {% block scripts %}
+        <!--suppress JSUnresolvedVariable -->
+        <script>
+            function onSubmit(form) {
+                alertify.confirm('Ma\u2019lumotni o\u{2018}chirish', 'Buni o\u{2018}chirib tashlamoqchimisiz?', () => {
+                    form.submit()
+                }, undefined)
+                    .set('labels', {ok: 'Ha', cancel: 'Bekor'});
+                return false;
+            }
+        </script>
+    {% endblock %}
 {% endblock %}

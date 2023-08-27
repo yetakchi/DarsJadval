@@ -4,7 +4,7 @@
     <div class="container">
         <div class="w-75 mx-auto">
             <h2>O&#8216;qituvchi qo&#8216;shish</h2><br>
-            <form method="post">
+            <form action="{{ url_for('teacher_add', _method='POST') }}" method="post">
                 <div class="form-group">
                     <label for="name">O&#8216;qituvchi familiyasi va ismi</label>
                     <input type="text" name="name" id="name" class="form-control" autocomplete="off">

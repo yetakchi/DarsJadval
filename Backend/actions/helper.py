@@ -1,101 +1,20 @@
 import calendar
 import datetime
 
-# Variables
-days = [
-    {
-        "id": 1,
-        "day_name": "Dush",
-        "full_name": "Dushanba"
-    },
-    {
-        "id": 2,
-        "day_name": "Sesh",
-        "full_name": "Seshanba"
-    },
-    {
-        "id": 3,
-        "day_name": "Chor",
-        "full_name": "Chorshanba"
-    },
-    {
-        "id": 4,
-        "day_name": "Pay",
-        "full_name": "Payshanba"
-    },
-    {
-        "id": 5,
-        "day_name": "Jum",
-        "full_name": "Juma"
-    },
-    {
-        "id": 6,
-        "day_name": "Shan",
-        "full_name": "Shanba"
-    }
-]
-
-subject_forms = {
-    1: "Ma\u2019ruza",
-    2: "Amaliyot",
-    3: "Tajriba",
-    4: "Seminar"
-}
-
-couples = [
-    {
-        'start_time': '08:30',
-        'end_time': '09:50'
-    },
-    {
-        'start_time': '10:00',
-        'end_time': '11:20'
-    },
-    {
-        'start_time': '11:30',
-        'end_time': '12:50'
-    },
-    {
-        'start_time': '13:30',
-        'end_time': '14:50'
-    },
-    {
-        'start_time': '15:00',
-        'end_time': '16:20'
-    },
-    {
-        'start_time': '16:30',
-        'end_time': '17:50'
-    },
-]
-
-months = [
-    'yanvar',
-    'fevral',
-    'mart',
-    'aprel',
-    'may',
-    'iyun',
-    'iyul',
-    'avgust',
-    'sentyabr',
-    'oktyabr',
-    'noyabr',
-    'dekabr'
-]
+from database.immutable import *
 
 
 # Lessons
 def auto_lesson():
     time = datetime.datetime.now()
-    return f"/lessons/{time.weekday() + 1}"
+    return time.weekday()
 
 
 def current_lesson(lessons):
     t = f"{datetime.datetime.now().time()}"
 
     for lesson in lessons:
-        lesson['teach_form'] = subject_forms[lesson['teach_form']]
+        lesson['form'] = subject_forms[lesson['form']]
         couple(lesson)
 
         lesson['active'] = lesson['start_time'] < t < lesson['end_time']
@@ -146,8 +65,8 @@ def today_date():
 
 
 def couple(lesson):
-    lesson['start_time'] = couples[lesson['couple']]['start_time']
-    lesson['end_time'] = couples[lesson['couple']]['end_time']
+    lesson['start_time'] = couples[lesson['couple'] - 1]['start_time']
+    lesson['end_time'] = couples[lesson['couple'] - 1]['end_time']
 
     # lesson['start_time'] = ('0' + str(lesson['start_time']))[-8:-3] # timedelta to clock string
     # lesson['end_time'] = ('0' + str(lesson['end_time']))[-8:-3]

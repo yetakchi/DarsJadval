@@ -4,7 +4,7 @@
     <div class="container">
         <div class="w-75 mx-auto">
             <h2>Fan qo&#8216;shish</h2><br>
-            <form action="/subjects" method="{{ 'PUT' if (subject) else 'POST' }}">
+            <form action="{{ action }}" method="POST">
                 <div class="form-group">
                     <label for="name">Fan nomi</label>
                     <input type="text" name="name" id="name" class="form-control"
@@ -21,6 +21,9 @@
                         {% endfor %}
                     </select>
                 </div>
+                {% if subject %}
+                    <input type="hidden" name="_method" value="PUT">
+                {% endif %}
                 <div class="div">
                     <button type="submit" class="btn btn-info">Saqlash</button>
                     <button type="reset" class="btn btn-light float-right">Tozlash</button>

@@ -4,16 +4,19 @@
     <div class="container w-50">
         <h1>{{ teacher.teacher }}</h1>
         <div class="alert alert-info">
-            <form action="/teachers/{{ teacher.id }}" method="put">
+            <form action="{{ url_for('teacher_update_delete', idx=teacher.id) }}" method="post">
                 <div class="form-group">
                     <label for="name"><b>O&#8216;qituvchi familiyasi va ismi</b></label>
                     <input type="text" name="name" id="name" value="{{ teacher.name }}"
-                           class="form-control" required>
+                           class="form-control" autocomplete="off" required>
                 </div>
+                <input type="hidden" name="_method" value="PUT">
                 <button type="submit" class="btn btn-primary">Yangilash</button>
                 <button type="button" onclick="del_form.submit()" class="btn btn-danger">O&#8216;chirish</button>
             </form>
-            <form action="/teachers/{{ teacher.id }}" method="post" id="del_form"></form>
+            <form action="{{ url_for('teacher_update_delete', idx=teacher.id) }}" method="POST" id="del_form">
+                <input type="hidden" name="_method" value="DELETE">
+            </form>
         </div>
     </div>
 {% endblock %}

@@ -7,42 +7,62 @@
             <div class="card-body">
                 <table class="table">
                     <thead>
-                    <tr>
-                        <th>Dars</th>
-                        <th>Fan nomi</th>
-                        <th>Dars shakli</th>
-                        <th>O&#8216;qituvchi</th>
-                        <th>O&#8216;qitish shakli</th>
-                        <th>Akademik soat</th>
-                        <th>Boshlanish vaqti</th>
-                        <th>Tugash vaqti</th>
-                        <th>Hafta kuni</th>
-                        <th>Xona</th>
-                        <th><span>Ko&#8216;proq</span></th>
-                    </tr>
+                        <tr>
+                            <th>Dars</th>
+                            <th>Fan nomi</th>
+                            <th>Dars shakli</th>
+                            <th>O&#8216;qituvchi</th>
+                            <th>O&#8216;qitish shakli</th>
+                            <th>Akademik soat</th>
+                            <th>Boshlanish vaqti</th>
+                            <th>Tugash vaqti</th>
+                            <th>Hafta kuni</th>
+                            <th>Xona</th>
+                            <th><span>Ko&#8216;proq</span></th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {% for lesson in lessons %}
-                        <tr>
-                            <td>{{ lesson.id }}</td>
-                            <td>{{ lesson.subject }}</td>
-                            <td>{{ subject_forms[lesson.form] }}</td>
-                            <td>{{ lesson.teacher }}</td>
-                            <td>{{ lesson.teach_form }}</td>
-                            <td>{{ lesson.couple }}</td>
-                            <td>{{ lesson.start_time }}</td>
-                            <td>{{ lesson.end_time }}</td>
-                            <td>{{ lesson.week_day }}</td>
-                            <td>{{ lesson.room }}</td>
-                            <td>
-                                <a href="/lessons/{{ lesson.id }}/detail"
-                                   class="btn btn-info"><span>Ko&#8216;rish</span></a>
-                            </td>
-                        </tr>
-                    {% endfor %}
+                        {% for lesson in lessons %}
+                            <tr>
+                                <td>{{ lesson.id }}</td>
+                                <td>{{ lesson.subject }}</td>
+                                <td>{{ subject_forms[lesson.form] }}</td>
+                                <td>{{ lesson.teacher }}</td>
+                                <td>{{ lesson.teach_form }}</td>
+                                <td>{{ lesson.couple }}</td>
+                                <td>{{ lesson.start_time }}</td>
+                                <td>{{ lesson.end_time }}</td>
+                                <td>{{ lesson.week_day }}</td>
+                                <td>{{ lesson.room }}</td>
+                                <td>
+                                    <a href="/lessons/{{ lesson.id }}/detail" class="btn btn-info">
+                                        <span>Ko&#8216;rish</span>
+                                    </a>
+                                    <form action="{{ url_for('lesson_update_delete', idx=lesson.id) }}" method="POST"
+                                          onsubmit="onSubmit(event, this)" class="d-inline">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="btn btn-danger">
+                                            <span>O&#8216;chirish</span>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    {% block scripts %}
+        <!--suppress JSUnresolvedVariable -->
+        <script>
+            function onSubmit(e, form) {
+                e.preventDefault();
+                alertify.confirm('Ma\u2019lumotni o\u{2018}chirish', 'Buni o\u{2018}chirib tashlamoqchimisiz?', () => {
+                    form.submit()
+                }, undefined)
+                    .set('labels', {ok: 'Ha', cancel: 'Bekor'});
+            }
+        </script>
+    {% endblock %}
 {% endblock %}
