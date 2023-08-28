@@ -42,4 +42,4 @@ Front-End
 ### Links
 - [Method Override](https://dev.to/moz5691/method-override-for-put-and-delete-in-html-3fp2)
 - [Named Routes](https://stackoverflow.com/questions/55103067/flask-does-the-function-name-need-to-match-the-app-route-path)
-- [Best Alerts](https://medium.com/nerd-for-tech/best-notification-libraries-and-plugins-for-javascript-and-jquery-c457e50eeddd)
+- [Top Alerts](https://medium.com/nerd-for-tech/best-notification-libraries-and-plugins-for-javascript-and-jquery-c457e50eeddd)

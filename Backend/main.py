@@ -1,7 +1,8 @@
 from flask import Flask, jsonify, render_template, request, redirect, url_for
 
-from actions import helper
+from app import utils
 from app.repositories import TeacherRepository, SubjectRepository, LessonRepository
+from app.utils import helper
 from config import SERVER_HOST, SERVER_PORT
 from database import immutable
 
@@ -19,28 +20,6 @@ def hook():
         request.environ['REQUEST_METHOD'] = request.form.get("_method")
 
 
-@app.route('/days')
-def days():
-    result = helper.get_days()
-    return jsonify(result)
-
-
-@app.get('/lessons/auto')
-def lessons():
-    weekday = helper.auto_lesson()
-    return redirect(f"/lessons/{weekday + 1}")
-
-
-@app.get('/lessons/<int:day>')
-def current_lesson(day):
-    return jsonify(helper.current_lesson(lesson_repo.get_today_lessons(day)))
-
-
-@app.get('/today')
-def today():
-    return helper.today_date()
-
-
 # Templates, admin side
 @app.get('/')
 def index():
@@ -52,13 +31,37 @@ def about():
     return render_template('about.html')
 
 
+@app.route('/days')
+def days():
+    result = utils.get_days()
+    return jsonify(result)
+
+
+@app.get('/today')
+def today():
+    return utils.today_date()
+
+
 # Lessons
 @app.get('/lessons')
 def lesson_list():
+    dataset = lesson_repo.lessons()
     return render_template('lesson/index.html',
-                           lessons=helper.lesson_list(lesson_repo.lessons()),
+                           lessons=helper.formify_list(dataset),
                            subject_forms=immutable.subject_forms
                            )
+
+
+@app.get('/lessons/<int:day>')
+def current_lesson(day):
+    _lesson_list = lesson_repo.get_today_lessons(day)
+    return jsonify(helper.current_lesson(_lesson_list))
+
+
+@app.get('/lessons/auto')
+def lessons():
+    weekday = utils.day_of_week()
+    return redirect(f"/lessons/{weekday + 1}")
 
 
 @app.get('/lessons/create')

@@ -23,7 +23,7 @@
                                         <span>Ko&#8216;rish</span>
                                     </a>
                                     <form action="{{ url_for('teacher_update_delete', idx=teacher.id) }}" method="POST"
-                                          onsubmit="return onSubmit()" class="d-inline-block">
+                                          onsubmit="return onSubmit(this)" class="d-inline-block">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <button type="submit" class="btn btn-danger">
                                             <span>O&#8216;chirish</span>

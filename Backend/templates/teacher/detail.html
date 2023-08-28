@@ -4,7 +4,7 @@
     <div class="container w-50">
         <h1>{{ teacher.teacher }}</h1>
         <div class="alert alert-info">
-            <form action="{{ url_for('teacher_update_delete', idx=teacher.id) }}" method="post">
+            <form id="form_a" action="{{ url_for('teacher_update_delete', idx=teacher.id) }}" method="post">
                 <div class="form-group">
                     <label for="name"><b>O&#8216;qituvchi familiyasi va ismi</b></label>
                     <input type="text" name="name" id="name" value="{{ teacher.name }}"
@@ -12,10 +12,7 @@
                 </div>
                 <input type="hidden" name="_method" value="PUT">
                 <button type="submit" class="btn btn-primary">Yangilash</button>
-                <button type="button" onclick="del_form.submit()" class="btn btn-danger">O&#8216;chirish</button>
-            </form>
-            <form action="{{ url_for('teacher_update_delete', idx=teacher.id) }}" method="POST" id="del_form">
-                <input type="hidden" name="_method" value="DELETE">
+                <button type="button" onclick="form_a.reset()" class="btn btn-light">Qaytarish</button>
             </form>
         </div>
     </div>
